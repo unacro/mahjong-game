@@ -1,4 +1,3 @@
-from asyncio.log import logger
 from utils import Utils
 from const import Const
 from engine import MahjongEngine
@@ -37,6 +36,17 @@ class MahjongEngineTest(object):
                 test_result.append(
                     f'{Const.Mahjong(i).name} => {self.Engine.translate(Const.Mahjong(i))}'
                 )
+            new_deck = self.Engine.new_deck(True)
+            test_result.append(
+                self.Engine.humanize([
+                    self.Engine.deserialize(new_deck[:4]),
+                    self.Engine.deserialize(new_deck[4:8]),
+                    self.Engine.deserialize(new_deck[8:12]),
+                    [[['1z'], ['2z', [[[['1s', [['0m']]]]]], '3z']],
+                     ['6m', {
+                         'test': '8m'
+                     }], {'8p'}, [['7z'], ['2s', '3p']], '5s'],
+                ]), )
             if echo_result:
                 print_result(test_result)
             return True
@@ -103,8 +113,39 @@ class MahjongEngineTest(object):
             return True
 
         elif unit == 'near_tile':
-            new_deck = self.Engine.new_deck()
             test_result = []
+            enable_loop = False
+            enable_loop = True
+            tips1, tips2, tips3, tips4 = [], [], [], []
+            suit = ['m', 'p', 's']
+            for i in range(1):
+                for j in [1, 2, 4, 5, 0, 6, 8, 9]:
+                    tips1.append(
+                        f'{self.Engine.humanize(str(j)+suit[i])} => {self.Engine.humanize(self.Engine.near_tile(str(j)+suit[i], 1, enable_loop))}'
+                    )
+            for i in range(1):
+                for j in [1, 2, 4, 5, 0, 6, 8, 9]:
+                    tips2.append(
+                        f'{self.Engine.humanize(self.Engine.near_tile(str(j)+suit[i], -1, enable_loop))} <= {self.Engine.humanize(str(j)+suit[i])}'
+                    )
+            for i in range(1, 8):
+                tips3.append(
+                    f'{self.Engine.humanize(str(i)+"z")} => {self.Engine.humanize(self.Engine.near_tile(str(i)+"z", 1, enable_loop))}'
+                )
+            for i in range(1, 8):
+                tips4.append(
+                    f'{self.Engine.humanize(self.Engine.near_tile(str(i)+"z", -1, enable_loop))} <= {self.Engine.humanize(str(i)+"z")}'
+                )
+            tabs = ' ' * 4
+            tips = [
+                tabs.join(tips1),
+                tabs.join(tips2),
+                tabs.join(tips3),
+                tabs.join(tips4),
+            ]
+            test_result.append('\n'.join(tips))
+            test_result.append('随机抽查:')
+            new_deck = self.Engine.new_deck()
             for tile in new_deck[:10]:
                 the_next = self.Engine.near_tile(tile, 1, True)
                 test_result.append(
@@ -207,52 +248,11 @@ class MahjongEngineTest(object):
 
     @Utils.record_elapsed
     def e2e_test(self) -> None:
-        example = [[['1z'], ['2z', [[[['1s', [['0m']]]]]], '3z']],
-                   ['6m', {
-                       'test': '8m'
-                   }], {'8p'}, [['7z'], ['2s', '3p']], '5s']
-        new_deck = self.Engine.new_deck(True)
-        logger.test(
-            '翻译函数无视复杂结构的兼容性',
-            self.Engine.humanize([
-                self.Engine.deserialize(new_deck[:4]),
-                self.Engine.deserialize(new_deck[4:8]),
-                self.Engine.deserialize(new_deck[8:12]),
-                example,
-            ]),
-            '叠中叠',
-        )
-        print()
-        enable_loop = False
-        #enable_loop = True
-        tips1, tips2, tips3, tips4 = [], [], [], []
-        suit = ['m', 'p', 's']
-        for i in range(1):
-            for j in [1, 2, 4, 5, 0, 6, 8, 9]:
-                tips1.append(
-                    f'{self.Engine.humanize(str(j)+suit[i])} => {self.Engine.humanize(self.Engine.near_tile(str(j)+suit[i], 1, enable_loop))}'
-                )
-        for i in range(1):
-            for j in [1, 2, 4, 5, 0, 6, 8, 9]:
-                tips2.append(
-                    f'{self.Engine.humanize(self.Engine.near_tile(str(j)+suit[i], -1, enable_loop))} <= {self.Engine.humanize(str(j)+suit[i])}'
-                )
-        for i in range(1, 8):
-            tips3.append(
-                f'{self.Engine.humanize(str(i)+"z")} => {self.Engine.humanize(self.Engine.near_tile(str(i)+"z", 1, enable_loop))}'
-            )
-        for i in range(1, 8):
-            tips4.append(
-                f'{self.Engine.humanize(self.Engine.near_tile(str(i)+"z", -1, enable_loop))} <= {self.Engine.humanize(str(i)+"z")}'
-            )
-        tabs = ' ' * 4
-        tips = [
-            tabs.join(tips1),
-            tabs.join(tips2),
-            tabs.join(tips3),
-            tabs.join(tips4),
-        ]
-        logger.test('\n'.join(tips))
+        bug_deck_code = '1s4p4s9s3p0p1z7p1s9s1m9p8p1s7s5p3s3s1z4m7z9m8m7s8m5p8m9m3s4z7m4p5z1s5s2p2z5p3z9s4z0s7p5z7m2s6z2m1p2z8p9p6p5m1p8s3z3m9p8s6z4z2p6z2s1m9p7m2z6m2s8s0m1m4s4s7z7m2p3z4s6p2z7s7z9s4m6z2m3p2p4z1p6p6s3m4m9m6s3m6s3p8p7z3z8s7p4p4m7p7s6p2m5z1z4p3m5m1p6m5z6m1m8p2m6s8m6m2s5s9m5m3p5s3s1z'
+        res = MahjongEngine.V1.humanize(MahjongEngine.V1.deal(
+            bug_deck_code, 1))
+        logger.test(f'{res}')
+        logger.test(f'黑箱测试完成')
 
 
 def test(engine_version: int = 1) -> None:

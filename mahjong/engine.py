@@ -1,5 +1,5 @@
 from functools import reduce
-import logging
+import time
 from utils import Utils
 from const import Const
 
@@ -165,7 +165,7 @@ class MahjongEngine(object):
                 else:
                     deck.append(Const.Mahjong[
                         f'{tile.name}{suffix[count[Const.Index[tile.name]]]}'])
-                count[Const.Index[tile.name]] += 1
+                    count[Const.Index[tile.name]] += 1
             return deck
 
         @staticmethod
@@ -654,5 +654,28 @@ class MahjongEngine(object):
             self.__Player = controller
             # TODO 协程 / 多线程
 
-        def think(self) -> None:  # TODO 判断
-            pass
+        def analyse(self, mode: str = 'discard', data=None) -> int:
+            """
+            TODO 判断舍张
+            """
+            #MahjongEngine.V1.is_ready()
+            if mode == 'call':
+                if data != None and {'tile', 'options'} <= set(data.keys()):
+                    if 0 in data['options']:
+                        return 0  # 能和就和
+                    elif 1 in data['options']:
+                        return 1  # 能杠就杠
+                    else:
+                        logger.debug(
+                            f'AI 假装思索中: [{self.__Player.get_log()}] come {MahjongEngine.V1.humanize(data["tile"])}'
+                        )
+                        time.sleep(2)  # 假装在判断
+                        return Utils.shuffle(data['options'])[0]  # 否则随机鸣牌
+                else:
+                    logger.fatal(f'AI 分析函数参数格式错误 data={data}')
+            elif mode == 'chow':
+                # TODO 判断优先吃哪组
+                return 0  # 别想了有得吃就吃吧
+            else:
+                time.sleep(1)  # 假装在判断
+                return len(self.__Player.Hand) - 2  # 保留进张 优先清空字牌
