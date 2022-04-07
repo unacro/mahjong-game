@@ -155,11 +155,38 @@ class MahjongEngineTest(object):
                 print_result(test_result)
             return True
 
+        elif unit == 'map_count':
+            test_result = []
+            rand_deck_code = MahjongEngine.V1.new_deck(True)
+            random_hand = MahjongEngine.V1.sort(
+                MahjongEngine.V1.deal(rand_deck_code, 1))
+            visual_tiles = MahjongEngine.V1.humanize(random_hand)
+            test_result.append(f'{visual_tiles} 随机生成的手牌')
+            try:
+                for map_style in ['default', 'long', 'short']:
+                    map_result = MahjongEngine.V1.map_tiles_count(
+                        random_hand, map_style)
+                    restore_result = MahjongEngine.V1.restore_count_map(
+                        map_result)
+                    new_visual_tiles = MahjongEngine.V1.humanize(
+                        restore_result)
+                    tips = f'{new_visual_tiles} {len(restore_result)} 映射再还原 {map_style} 方式'
+                    if new_visual_tiles != visual_tiles:
+                        tips += ' (赤宝牌的标记在转换过程中丢失)'
+                    test_result.append(tips)
+            except Exception as e:
+                logger.warn(f'{e} ← 这一条是符合预期的正常测试结果')
+            finally:
+                if echo_result:
+                    print_result(test_result)
+            return True
+
         elif unit == 'can_win':
             test_result = []
             new_deck = self.Engine.new_deck()
             sample_hand = [
                 '7z7z',
+                '4m5m5m0m6m2p2p2p5p0p6p7p8p5p',
                 '2m2m2m6m7m8m3p4p4p4p2s3s4s3p',  #0 听 235
                 '1m1m1m2m2m2m3m3m3m4m4m4m0m5m',  #1 一色三节高
                 '1m1m1m2m2m2m2m3m3m3m3m4m4m4m',  #2 一色三节高 复合两暗杠
@@ -225,6 +252,27 @@ class MahjongEngineTest(object):
                 print_result(test_result)
             return True
 
+        elif unit == 'is_ready':
+            test_result = []
+            sample_hand = [
+                '7z',
+                '4m5m5m0m6m2p2p2p5p0p6p7p8p',
+                '2m2m2m6m7m8m3p4p4p4p2s3s4s',  #0 听 235
+            ]
+            for i in range(len(sample_hand)):
+                hand_tiles = self.Engine.deserialize(sample_hand[i])
+                winning_tiles = self.Engine.is_ready(hand_tiles)
+                if len(winning_tiles) > 0:
+                    test_result.append(
+                        f'测试用例 #{i} {self.Engine.humanize(hand_tiles)} 听牌 => {winning_tiles}'
+                    )
+                else:
+                    raise (Exception(
+                        f'{self.Engine.humanize(hand_tiles)} 难道不能听牌?'))
+            if echo_result:
+                print_result(test_result)
+            return True
+
         return False
 
     @Utils.record_elapsed
@@ -236,8 +284,10 @@ class MahjongEngineTest(object):
             ('deal', False),
             ('query', False),
             ('near_tile', False),
+            ('map_count', False),
             ('can_win', False),
             ('all_can_win', True),
+            ('is_ready', False),
         ]
         for index, item in enumerate(unit_list):
             logger.test(f'开始 {index+1}/{len(unit_list)} 单元测试 {item[0]}()')
@@ -248,10 +298,22 @@ class MahjongEngineTest(object):
 
     @Utils.record_elapsed
     def e2e_test(self) -> None:
-        bug_deck_code = '1s4p4s9s3p0p1z7p1s9s1m9p8p1s7s5p3s3s1z4m7z9m8m7s8m5p8m9m3s4z7m4p5z1s5s2p2z5p3z9s4z0s7p5z7m2s6z2m1p2z8p9p6p5m1p8s3z3m9p8s6z4z2p6z2s1m9p7m2z6m2s8s0m1m4s4s7z7m2p3z4s6p2z7s7z9s4m6z2m3p2p4z1p6p6s3m4m9m6s3m6s3p8p7z3z8s7p4p4m7p7s6p2m5z1z4p3m5m1p6m5z6m1m8p2m6s8m6m2s5s9m5m3p5s3s1z'
-        res = MahjongEngine.V1.humanize(MahjongEngine.V1.deal(
-            bug_deck_code, 1))
-        logger.test(f'{res}')
+        rand_deck_code = MahjongEngine.V1.new_deck(True)
+        random_deck = MahjongEngine.V1.sort(
+            MahjongEngine.V1.deal(rand_deck_code))
+
+        class Player:
+
+            def __init__(self):
+                self.Hand = random_deck
+
+        com = MahjongEngine.AI(Player())
+
+        logger.debug(
+            f'{MahjongEngine.V1.humanize(random_deck)} 初始随机手牌 {len(random_deck)}'
+        )
+        logger.test(
+            f'AI 打出 {MahjongEngine.V1.humanize(random_deck[com.analyse()])}')
         logger.test(f'黑箱测试完成')
 
 

@@ -64,7 +64,7 @@ class MahjongEngine(object):
                 elif isinstance(tile, int):
                     tile_name = Const.Mahjong(tile).name[:-1]
                 else:
-                    raise (Exception(f'翻译牌面失败 输入参数的类型有误 {type(tile)}: {tile}'))
+                    logger.fatal(f'翻译牌面失败 输入参数的类型有误 {type(tile)}: {tile}')
                 tile_key = tile_name[:-1]
                 if tile_name[-2:] == '5D' and tile_name[0] != 'Z':
                     tile_key = f'{tile_name[:-2]}0'
@@ -147,8 +147,7 @@ class MahjongEngine(object):
                 for tile in tiles:
                     tiles_sequence.append(tile)
             else:
-                raise (Exception(
-                    f'序列化牌序失败 输入参数的类型有误 {type(tiles[0])}: {tiles[0]}'))
+                logger.fatal(f'序列化牌序失败 输入参数的类型有误 {type(tiles[0])}: {tiles[0]}')
             return ''.join(tiles_sequence)
 
         @staticmethod
@@ -174,7 +173,7 @@ class MahjongEngine(object):
             根据牌序发起始手牌
             """
             if len(deck_sequence) != 272:
-                raise (Exception(f'牌组序列长度错误 {len(deck_sequence)}'))
+                logger.fatal(f'牌组序列长度错误 {len(deck_sequence)}')
             the_deck = MahjongEngine.V1.deserialize(deck_sequence)
             hand_tiles = []
             for i in range(3):
@@ -192,7 +191,7 @@ class MahjongEngine(object):
             根据牌序查询宝牌
             """
             if len(deck_sequence) != 272:
-                raise (Exception(f'牌组序列长度错误 {len(deck_sequence)}'))
+                logger.fatal(f'牌组序列长度错误 {len(deck_sequence)}')
             the_deck = MahjongEngine.V1.deserialize(deck_sequence)
             query_result = []
             if keyword == 'kong':  # 岭上牌
@@ -220,7 +219,7 @@ class MahjongEngine(object):
             elif isinstance(tile, str):
                 indicator = MahjongEngine.V1.deserialize(tile.lower())[0]
             else:
-                raise (Exception(f'计算下一张牌失败 输入参数的类型有误 {type(tile)}: {tile}'))
+                logger.fatal(f'计算下一张牌失败 输入参数的类型有误 {type(tile)}: {tile}')
             suit, rank = int(indicator / 100), int(indicator / 10 % 10)
             new_rank = 0
             if suit < 4:  # 数字牌
@@ -271,7 +270,38 @@ class MahjongEngine(object):
                 return long_map
 
         @staticmethod
-        def use_razor(sheep: list, no_eyes: bool = False) -> list:
+        def restore_count_map(count_map: list) -> list:
+            """
+            将映射后的平铺数量数组还原为原本可用的麻将数组
+            1. 映射时会丢失仿真麻将牌在一整副麻将中的唯一性编号信息
+            2. 不过无伤大雅 目前并没有严格需要检测唯一性的地方 (反作弊可能需要?)
+            3. 甚至赤宝牌的标记也保不住 没什么办法 所幸也不需要
+               因为原数组并没有丢失 这里只是用来在处理后求差集而已
+            """
+            preprocessed = None
+            restored_tiles = []
+            if len(count_map) == 39:
+                preprocessed = count_map[1:10]
+                preprocessed.extend(count_map[11:20])
+                preprocessed.extend(count_map[21:30])
+                preprocessed.extend(count_map[31:39])
+            elif len(count_map) == 34:
+                preprocessed = count_map
+            else:
+                logger.fatal(
+                    f'数量映射数组长度({len(count_map)})错误 (Tips: 不定长的 short 映射会丢失具体位置信息)'
+                )
+            for tile, count in enumerate(preprocessed):
+                for _ in range(count):
+                    restored_tiles.append(
+                        MahjongEngine.V1.deserialize(
+                            Const.Code[Const.Index(tile).name].value)[0])
+            return restored_tiles
+
+        @staticmethod
+        def use_razor(sheep: list,
+                      strict: bool,
+                      no_eyes: bool = False) -> list:
 
             def _razor(wool: list) -> list:
                 """
@@ -311,27 +341,27 @@ class MahjongEngine(object):
                                     wool[index] -= 1
                                     wool[index + 1] -= 1
                                     wool[index + 2] -= 1
-                                else:
+                                elif strict:
                                     return []
                             elif wool[index - 2] + wool[index + 2] == 0:
                                 if min(wool[index - 1:index + 2]) > 0:
                                     wool[index - 1] -= 1
                                     wool[index] -= 1
                                     wool[index + 1] -= 1
-                                else:
+                                elif strict:
                                     return []
                             elif wool[index + 1] == 0:
                                 if min(wool[index - 2:index + 1]) > 0:
                                     wool[index - 2] -= 1
                                     wool[index - 1] -= 1
                                     wool[index] -= 1
-                                else:
+                                elif strict:
                                     return []
 
                 for i in range(31, 38):  # 处理字牌
                     if wool[i] == 3:
                         wool[i] = 0
-                    elif wool[i] in [1, 4]:  # 1为孤立单张 4张字牌还不暗杠留着下蛋呢
+                    elif wool[i] in [1, 4] and strict:  # 1为孤立单张 4张字牌还不暗杠留着下蛋呢
                         return []
 
                 return wool
@@ -354,14 +384,14 @@ class MahjongEngine(object):
                                     wool[index] -= 1
                                     wool[index + 1] -= 1
                                     wool[index + 2] -= 1
-                                else:
+                                elif strict:
                                     return []
                             elif wool[index + 1] == 0:  # >1, >1, 1/2, 0
                                 if min(wool[index - 2:index + 1]) > 0:
                                     wool[index - 2] -= 1
                                     wool[index - 1] -= 1
                                     wool[index] -= 1
-                                else:
+                                elif strict:
                                     return []
                 return wool
 
@@ -389,9 +419,11 @@ class MahjongEngine(object):
                 for eyes in possibility:
                     answer = hand_map[:]  # 深拷贝 避免影响下一次尝试
                     answer[eyes] -= 2  # 去掉雀头
-                    answer = MahjongEngine.V1.use_razor(answer)
-                    answer = MahjongEngine.V1.use_razor(answer, True)
-                    answer = MahjongEngine.V1.use_razor(answer)
+                    answer = MahjongEngine.V1.use_razor(answer, strict=True)
+                    answer = MahjongEngine.V1.use_razor(answer,
+                                                        strict=True,
+                                                        no_eyes=True)
+                    answer = MahjongEngine.V1.use_razor(answer, strict=True)
                     if len(answer) == 0:  # 排除本次错误的假设
                         continue
                     elif max(answer) == 0:  # 没有剩余存疑的手牌
@@ -399,8 +431,7 @@ class MahjongEngine(object):
                     else:
                         logger(f'猜测并去掉雀头 {eyes} 前 {hand_map[1:10]} 万子')
                         logger(f'猜测并去掉雀头 {eyes} 后 {answer[1:10]} 万子')
-                        raise Exception(
-                            f'假设雀头为 {eyes} 的可能性无法确定也无法排除 需要继续进一步猜测')
+                        logger.fatal(f'假设雀头为 {eyes} 的可能性无法确定也无法排除 需要继续进一步猜测')
                 return -1
 
             hand_count_map = None
@@ -409,7 +440,7 @@ class MahjongEngine(object):
                 hand_count_map.extend(hand_tiles)
                 hand_count_map.extend([0 for _ in range(29)])
             elif len(hand_tiles) % 3 != 2:
-                raise Exception(f'V1 和牌判定 手牌数量错误 {len(hand_tiles)}')
+                logger.fatal(f'V1 和牌判定 手牌数量错误 {len(hand_tiles)}')
             else:
                 hand_count_map = MahjongEngine.V1.map_tiles_count(
                     hand_tiles, 'long')
@@ -435,7 +466,7 @@ class MahjongEngine(object):
                     return False
 
             # logger(f'第一次简化前 {hand_count_map[1:10]} 万子')
-            tils_map = MahjongEngine.V1.use_razor(hand_count_map)
+            tils_map = MahjongEngine.V1.use_razor(hand_count_map, strict=True)
             if len(tils_map) == 0:  # 简化过程中发现不可能和
                 return False
             # logger(f'第一次简化后 {tils_map[1:10]} 万子')
@@ -456,7 +487,7 @@ class MahjongEngine(object):
                 for eyes in pairs:
                     answer = tils_map[:]  # 深拷贝 避免影响下一次尝试
                     answer[eyes] -= 2  # 去掉雀头
-                    answer = MahjongEngine.V1.use_razor(answer)
+                    answer = MahjongEngine.V1.use_razor(answer, strict=True)
                     if len(answer) == 0:  # 排除本次错误的假设
                         continue
                     elif max(answer) == 0:  # 没有剩余存疑的手牌
@@ -477,24 +508,52 @@ class MahjongEngine(object):
             return False
 
         @staticmethod
-        def is_ready(hand_tiles: list) -> bool:
+        def is_ready(hand_tiles: list) -> list:
             """
-            TODO 判定是否听牌
+            判定是否听牌
+            直接遍历 临时用一下
             """
-            if len(hand_tiles) % 3 != 1:
-                raise Exception(f'V1 听牌判定 手牌数量错误 {len(hand_tiles)}')
-                return False
+            hand = []
+            if len(hand_tiles) % 3 == 1:
+                hand = hand_tiles[:]
+            elif len(hand_tiles) % 3 == 2:
+                hand = hand_tiles[:-1]
+            else:
+                logger.fatal(f'V1 听牌判定 手牌数量错误 {len(hand_tiles)}')
+            winning_tiles = []
+            for i in range(34):
+                temp = hand[:]
+                tile = Const.Mahjong[f'{Const.Index(i).name}A']
+                temp.append(tile)
+                if MahjongEngine.V1.can_win(temp):
+                    winning_tiles.append(MahjongEngine.V1.humanize(tile))
+            return winning_tiles
 
-            tils_map = MahjongEngine.V1.use_razor(
-                MahjongEngine.V1.map_tiles_count(hand_tiles, 'long'))
-            if len(tils_map) == 0:  # 简化过程中发现不可能和
-                return False
-            logger(f'简化后 {tils_map[1:10]} 万子')
-            logger(f'简化后 {tils_map[11:20]} 饼子')
-            logger(f'简化后 {tils_map[21:30]} 索子')
-            logger(f'简化后 {tils_map[31:]} 字牌')
-
-            return False
+        @staticmethod
+        def lack_of(hand_tiles: list) -> list:
+            """
+            听牌缺张提示
+            没什么花里胡哨的 遍历 13 × 34 遍就是了 大力出奇迹
+            草！走！忽略！
+            """
+            if len(hand_tiles) % 3 != 2:
+                logger.fatal(f'V1 听牌提示 手牌数量错误 {len(hand_tiles)}')
+            tips = []
+            for index in range(len(hand_tiles)):
+                if index == len(hand_tiles) - 1:
+                    break
+                elif index > 0:
+                    if int(hand_tiles[index].value / 10) == int(
+                            hand_tiles[index - 1].value / 10):
+                        continue
+                temp = hand_tiles[:]
+                temp.pop(index)
+                winning_tiles = MahjongEngine.V1.is_ready(temp)
+                if len(winning_tiles) > 0:
+                    tips.append(
+                        f'打[{MahjongEngine.V1.humanize(hand_tiles[index])}]可和[{" ".join(winning_tiles)}]'
+                    )
+            return tips
 
         @staticmethod
         def limit(hand: list) -> int:
@@ -513,7 +572,7 @@ class MahjongEngine(object):
             first_win, second_win = MahjongEngine.V1.can_win(
                 temp), MahjongEngine.V2.can_win(temp)
             if first_win != second_win:
-                raise (Exception(f'交叉验证 和牌判断 算法时冲突'))
+                logger.fatal(f'交叉验证和牌判断算法时冲突')
             if first_win or second_win:  # 和
                 flag |= 0b11000
 
@@ -571,9 +630,10 @@ class MahjongEngine(object):
                 hand_count_map = hand_tiles[:]
                 hand_count_map.extend([0 for _ in range(25)])
             elif len(hand_tiles) % 3 == 2:
-                hand_count_map = MahjongEngine.V1.map_tiles_count(hand_tiles)
+                hand_count_map = MahjongEngine.V1.map_tiles_count(
+                    hand_tiles, 'middle')
             else:
-                raise Exception(f'V2 和牌判定 手牌数量错误 {len(hand_tiles)}')
+                logger.fatal(f'V2 和牌判定 手牌数量错误 {len(hand_tiles)}')
 
             def fetch_kotsu(temp: list, kotsu: list) -> tuple:  # 取出刻子
                 for i in range(len(temp)):
@@ -654,11 +714,48 @@ class MahjongEngine(object):
             self.__Player = controller
             # TODO 协程 / 多线程
 
-        def analyse(self, mode: str = 'discard', data=None) -> int:
+        def analyse(self, the_tile=None, history: dict = None) -> int:
             """
-            TODO 判断舍张
+            TODO 冷静分析.jpg
+            初始化时选定随机风格: 断么 平和 役牌 立直 染手
+
+                生成新的映射是标记要排除的还是要保留的 ?
+                排除: 左右为0 自己为1 所谓孤立 同样孤立打距离最远的
+                保留: 左右存在 自己复数 最后和手牌求差集
+                字牌(没有顺子)另有策略 数字牌可以复用 实际就是处理1到9
             """
-            #MahjongEngine.V1.is_ready()
+            hand_tiles = self.__Player.Hand[:]
+            tils_map = MahjongEngine.V1.map_tiles_count(hand_tiles, 'long')
+            preprocessed = tils_map  #  目前用的"保留"方案 "排除"换成 MahjongEngine.V1.use_razor(tils_map, strict=False)
+            safe_map = []
+            for index, count in enumerate(preprocessed):
+                safe_flag = False
+                if count > 0:
+                    if count >= 2:
+                        safe_flag = True  # 不止一张
+                    if index > 0 and index < 30 and preprocessed[index -
+                                                                 1] > 0:
+                        safe_flag = True  # 前面有连子
+                    if index < 30 and preprocessed[index + 1] > 0:
+                        safe_flag = True  # 后面有连子
+                if safe_flag:
+                    safe_map.append(1)
+                else:
+                    safe_map.append(0)
+            safe_tiles = MahjongEngine.V1.restore_count_map(safe_map)
+            safe_num = [int(i / 10) for i in safe_tiles]
+            # TODO 添加其他留下的理由 平衡不同的权重
+            useless = []
+            for index, tile in enumerate(hand_tiles):
+                if not int(tile / 10) in safe_num:
+                    useless.append(index)
+            #logger.debug(f'安全 {MahjongEngine.V1.humanize(safe_tiles)} {len(safe_tiles)}')
+            if len(useless) > 0:
+                return Utils.shuffle(useless)[0]  # 孤立的牌随便打一张
+            else:
+                return len(self.__Player.Hand) - 2
+
+        def decide(self, mode: str = 'discard', data=None) -> int:
             if mode == 'call':
                 if data != None and {'tile', 'options'} <= set(data.keys()):
                     if 0 in data['options']:
@@ -669,13 +766,17 @@ class MahjongEngine(object):
                         logger.debug(
                             f'AI 假装思索中: [{self.__Player.get_log()}] come {MahjongEngine.V1.humanize(data["tile"])}'
                         )
-                        time.sleep(2)  # 假装在判断
+                        time.sleep(1)  # 假装在判断 self.analyse()
                         return Utils.shuffle(data['options'])[0]  # 否则随机鸣牌
                 else:
                     logger.fatal(f'AI 分析函数参数格式错误 data={data}')
-            elif mode == 'chow':
-                # TODO 判断优先吃哪组
-                return 0  # 别想了有得吃就吃吧
+            elif mode == 'chow' and data != None and 'tile' in data:
+                # TODO 判断优先吃哪组 self.analyse(data['tile'])
+                return 0  # 别想了 有得吃就吃吧
             else:
-                time.sleep(1)  # 假装在判断
-                return len(self.__Player.Hand) - 2  # 保留进张 优先清空字牌
+                time.sleep(1)  # 假装有在想
+                if data != None and 'history' in data:
+                    return self.analyse(history=data['history'])
+                else:
+                    return len(self.__Player.Hand) - 2  # 保留进张 优先清空字牌
+                    return len(self.__Player.Hand) - 1  # 摸啥打啥 纯弱智

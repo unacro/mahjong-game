@@ -11,8 +11,10 @@ class MahjongGame(object):
         def __init__(self,
                      engine,
                      name: str = 'anonymous',
-                     is_npc: bool = True) -> None:
+                     is_npc: bool = True,
+                     enable_tips: bool = False) -> None:
             self.__Engine = engine
+            self.__EnableTips = False
             self.Name = name
             self.Score = 25000  # 点数
             self.Hand = []  # 手牌
@@ -23,12 +25,13 @@ class MahjongGame(object):
                 self.Master = MahjongEngine.AI(self)
             else:
                 self.Master = None
+                self.__EnableTips = enable_tips
 
         def deal_from(self, hand_tiles: list) -> None:
             if len(hand_tiles) in [13, 14]:
                 self.Hand = self.__Engine.sort(hand_tiles)
             else:
-                raise Exception(f'给 [{self.Name}] 发牌时手牌数量错误 {len(hand_tiles)}')
+                logger.fatal(f'给 [{self.Name}] 发牌时手牌数量错误 {len(hand_tiles)}')
 
         def draw(self, input_tile) -> None:
             self.Input.append(input_tile)  # 记录进张
@@ -36,7 +39,7 @@ class MahjongGame(object):
 
         def discard(self, hand_index: int = -1) -> str:
             if len(self.Hand) % 3 != 2:
-                raise Exception(
+                logger.fatal(
                     f'打出牌失败 手牌数量错误 {len(self.Hand)} {self.__Engine.humanize(self.Hand)}'
                 )
             if self.Master == None:
@@ -44,6 +47,13 @@ class MahjongGame(object):
                 for i, tile in enumerate(self.Hand):
                     hand_text.append(f'{i+1}:{self.__Engine.humanize(tile)}')
                 logger.info(f'[{self.Name}](玩家) 当前手牌\n{" ".join(hand_text)}')
+                if self.__EnableTips:
+                    winning_tiles = self.__Engine.is_ready(self.Hand)
+                    if len(winning_tiles) > 0:
+                        logger.info(f'Tips: 正在听 {" ".join(winning_tiles)}')
+                    discard_tips = self.__Engine.lack_of(self.Hand)
+                    if len(discard_tips) > 0:
+                        logger.info(f'Tips: {"  ".join(discard_tips)}')
                 logger.info(f'请输入要打第几张: 1 ~ {len(self.Hand)}')
                 hand_index = len(self.Hand) - 1
                 discard_index = input('>: ')
@@ -52,9 +62,9 @@ class MahjongGame(object):
                     if discard_index >= 0 and discard_index < len(self.Hand):
                         hand_index = discard_index
             else:
-                hand_index = self.Master.analyse(
+                hand_index = self.Master.decide(
                     'discard',
-                    {'output': {
+                    {'history': {
                         'right': [],
                         'front': [],
                         'left': [],
@@ -73,14 +83,15 @@ class MahjongGame(object):
                     tips = []
                     for tip in here:
                         tips.append(f'{self.__Engine.humanize(tip)}')
-                    logger.info(f'请输入要吃第几组: {" ".join(tips)}')
+                    logger.info(f'{" ".join(tips)}')
+                    logger.info(f'请输入要吃第几组: 1 ~ {len(tips)}')
                     choose = input('>: ')
                     if choose != '':
                         choose = int(choose) - 1
                     if choose >= 0 and choose < len(here):
                         choose_index = choose
                 else:
-                    choose_index = self.Master.analyse('chow', {'tile': there})
+                    choose_index = self.Master.decide('chow', {'tile': there})
             shuntsu = here[choose_index]
             for eat in shuntsu:
                 self.Hand.remove(eat)
@@ -212,7 +223,10 @@ class MahjongGame(object):
         logger.debug(f'山牌序列 {self.__DeckSequence[106:244]}')
         logger.debug(f'本局牌序 \n{self.tr(self.__Deck)}')
 
-    def join(self, player_name: str = 'default', is_npc: bool = True) -> bool:
+    def join(self,
+             player_name: str = 'default',
+             is_npc: bool = True,
+             enable_tips: bool = False) -> bool:
         if not self.__Running:
             logger.warn(f'玩家 [{player_name}] 加入游戏失败。游戏尚未准备好')
             return False
@@ -224,7 +238,8 @@ class MahjongGame(object):
         if player_name == 'default':
             player_name = ['东家', '南家', '西家', '北家'][len(self.__Players)]
         self.__Players.append(
-            MahjongGame.Player(self.__Engine, player_name, is_npc))
+            MahjongGame.Player(self.__Engine, player_name, is_npc,
+                               enable_tips))
         player_list = []
         for player in self.__Players:
             player_list.append(f'[{player.Name}]')
@@ -273,11 +288,10 @@ class MahjongGame(object):
                                 f'[{player.Name}] 手牌\n{player.get_log()} {self.__Engine.can_win(player.Hand)}'
                             )
                     else:
-                        ai_call = player.Master.analyse(
-                            'call', {
-                                'tile': the_tile,
-                                'options': buttons,
-                            })
+                        ai_call = player.Master.decide('call', {
+                            'tile': the_tile,
+                            'options': buttons,
+                        })
                         task_queue[ai_call].append((index, highlight))
         for task, executors in enumerate(task_queue):
             if executors != []:
@@ -290,9 +304,9 @@ class MahjongGame(object):
                             self.__Winner = active_player.Name
                             return True
                         else:
-                            raise (Exception(
-                                f'{active_player.Name} 诈和 {self.tr(active_player.Hand)}'
-                            ))
+                            logger.fatal(
+                                f'代码写的什么玩意儿 居然让 {active_player.Name} 诈和 {self.tr(active_player.Hand)} 了'
+                            )
                     elif task == 1:
                         temp = self.query("kong")[self.__KongCount]  # 岭上牌
                         self.__KongCount += 1

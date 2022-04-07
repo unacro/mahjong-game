@@ -81,7 +81,7 @@ class Utils(object):
 
         @staticmethod
         def fatal(*args) -> None:
-            raise (Exception(*args))
+            raise Exception(*args)
 
         def __call__(self, *args):
             Utils.Logger.debug(*args)

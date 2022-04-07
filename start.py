@@ -10,7 +10,7 @@ def main() -> None:
     Game = MahjongGame()
     Game.new()
     Game.join()
-    Game.join('小南', False)
+    Game.join('小南', False, True)
     Game.join('UUZ')
     Game.join('小北')
     Game.join('观战者')
