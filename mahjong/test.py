@@ -201,7 +201,7 @@ class MahjongEngineTest(object):
                     test_result.append(
                         f'测试用例 #{i} {self.Engine.humanize(hand)} 能否和牌: {win}')
                 else:
-                    raise (Exception(f'{self.Engine.humanize(hand)} 难道不能和牌?'))
+                    logger.fatal(f'{self.Engine.humanize(hand)} 难道不能和牌?')
             if echo_result:
                 print_result(test_result)
             return True
@@ -257,7 +257,7 @@ class MahjongEngineTest(object):
             sample_hand = [
                 '7z',
                 '4m5m5m0m6m2p2p2p5p0p6p7p8p',
-                '2m2m2m6m7m8m3p4p4p4p2s3s4s',  #0 听 235
+                '2m2m2m6m7m8m3p4p4p4p2s3s4s',
             ]
             for i in range(len(sample_hand)):
                 hand_tiles = self.Engine.deserialize(sample_hand[i])
@@ -267,8 +267,7 @@ class MahjongEngineTest(object):
                         f'测试用例 #{i} {self.Engine.humanize(hand_tiles)} 听牌 => {winning_tiles}'
                     )
                 else:
-                    raise (Exception(
-                        f'{self.Engine.humanize(hand_tiles)} 难道不能听牌?'))
+                    logger.fatal(f'{self.Engine.humanize(hand_tiles)} 难道不能听牌?')
             if echo_result:
                 print_result(test_result)
             return True
@@ -292,7 +291,7 @@ class MahjongEngineTest(object):
         for index, item in enumerate(unit_list):
             logger.test(f'开始 {index+1}/{len(unit_list)} 单元测试 {item[0]}()')
             if not self.__unit_test(*item):
-                raise (Exception(f'单元测试 {item} 未通过'))
+                logger.fatal(f'单元测试 {item} 未通过')
             print()
         logger.test(f'所有单元测试通过')
 

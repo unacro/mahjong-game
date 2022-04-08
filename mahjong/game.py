@@ -57,7 +57,7 @@ class MahjongGame(object):
                 logger.info(f'请输入要打第几张: 1 ~ {len(self.Hand)}')
                 hand_index = len(self.Hand) - 1
                 discard_index = input('>: ')
-                if discard_index != '':
+                if discard_index != '' and discard_index.isdigit():
                     discard_index = int(discard_index) - 1
                     if discard_index >= 0 and discard_index < len(self.Hand):
                         hand_index = discard_index
@@ -86,7 +86,7 @@ class MahjongGame(object):
                     logger.info(f'{" ".join(tips)}')
                     logger.info(f'请输入要吃第几组: 1 ~ {len(tips)}')
                     choose = input('>: ')
-                    if choose != '':
+                    if choose != '' and choose.isdigit():
                         choose = int(choose) - 1
                     if choose >= 0 and choose < len(here):
                         choose_index = choose
@@ -220,8 +220,7 @@ class MahjongGame(object):
         logger.info(
             f'本局牌序 md5 为 {Utils.md5(self.__DeckSequence)} 可前往 https://www.queji.tw/cardsmd5/ 验证'
         )
-        logger.debug(f'山牌序列 {self.__DeckSequence[106:244]}')
-        logger.debug(f'本局牌序 \n{self.tr(self.__Deck)}')
+        logger.debug(f'剧透本局牌序 \n{self.tr(self.__Deck)}')
 
     def join(self,
              player_name: str = 'default',
@@ -279,7 +278,7 @@ class MahjongGame(object):
                             f'[{player.Name}](玩家) 当前手牌\n{player.get_log()}')
                         logger.info('可以操作', ' '.join(tips))
                         pressed = input('>: ')
-                        if pressed != '':
+                        if pressed != '' and pressed.isdigit():
                             pressed = int(pressed)
                         if pressed in buttons:
                             task_queue[pressed].append((index, highlight))
@@ -305,7 +304,7 @@ class MahjongGame(object):
                             return True
                         else:
                             logger.fatal(
-                                f'代码写的什么玩意儿 居然让 {active_player.Name} 诈和 {self.tr(active_player.Hand)} 了'
+                                f'代码写的什么玩意儿 居然让 {active_player.Name} 诈和了 {self.tr(active_player.Hand)}'
                             )
                     elif task == 1:
                         temp = self.query("kong")[self.__KongCount]  # 岭上牌

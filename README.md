@@ -1,19 +1,22 @@
 # Mahjong Game
 
 <p align="center">
-    <a href="https://github.com/time2beat/mahjong-game" target="_blank"><img src="https://img.shields.io/badge/time2beat-mahjong--game-blue?logo=github" alt="Github Repository" /></a>
-    <a href="https://github.com/time2beat/mahjong-game/tags" target="_blank"><img src="https://img.shields.io/github/v/tag/time2beat/mahjong-game?label=Version" alt="Release Version" /></a>
-    <img src="https://img.shields.io/github/pipenv/locked/python-version/time2beat/mahjong-game" alt="Python Version" />
-    <img src="https://img.shields.io/github/languages/top/time2beat/mahjong-game?label=Python&logo=python&logoColor=fff" alt="Language Usage" />
+    <a href="https://github.com/time2beat/mahjong-game/tree/prototype" target="_blank"><img src="https://img.shields.io/badge/mahjong--game-prototype-success?logo=github" /></a>
+    <a href="https://github.com/time2beat/mahjong-game/releases/tag/v0.0.1-alpha-3b" target="_blank"><img src="https://img.shields.io/badge/version-v0.0.1--alpha--3b-informational" /></a>
+    <img src="https://img.shields.io/github/pipenv/locked/python-version/time2beat/mahjong-game/prototype?label=Python&logo=python&logoColor=fff" />
 </p>
 
 Python 无框架手写日麻
 
 ```Bash
+# 试玩
 $ python start.py
+
+# 自动测试
+$ python mahjong/game.py
 ```
 
-[开发日志](https://ews.ink/game/mahjong-game-diy/)
+[开发日志](https://ews.ink/tech/game-mahjong-diy/)
 
 ## Todo List
 
@@ -51,7 +54,7 @@ $ python start.py
   - [ ] 番种计算：翻数 / 符数
   - [ ] 输赢计分
   - [ ] 多局游戏（半庄东南）
-- [x] 不考虑 UI，考虑 UI 我换 Godot 了
+- [x] ~~不考虑 UI，考虑 UI 我换 Godot 了~~ 真换了
 
 ### Bug 修复
 
