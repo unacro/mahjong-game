@@ -1,7 +1,6 @@
 # Godot-specific ignores
 .import/
 export.cfg
-export_presets.cfg
 
 # Mono-specific ignores
 .mono/
@@ -9,6 +8,3 @@ data_*/
 
 # 根据 CSV 生成导入的二进制翻译文件
 *.translation
-
-# Chore
-chore/
