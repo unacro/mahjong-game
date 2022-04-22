@@ -4,8 +4,8 @@
     <a href="https://github.com/time2beat/mahjong-fruit/actions?query=workflow%3Agodot-ci-export" target="_blank"><img src="https://github.com/time2beat/mahjong-fruit/workflows/godot-ci-export/badge.svg" /></a>
     <a href="https://github.com/time2beat/mahjong-fruit" target="_blank"><img src="https://img.shields.io/badge/time2beat-mahjong--fruit-informational?logo=github" /></a>
     <a href="https://godotengine.org/" target="_blank"><img src="https://img.shields.io/github/languages/top/time2beat/mahjong-fruit?label=GDScript" /></a><br/>
-    <a href="https://github.com/time2beat/mahjong-fruit/tags" target="_blank"><img src="https://img.shields.io/github/v/tag/time2beat/mahjong-fruit?label=latest" /></a>
-    <a href="#play-online" target="_blank"><img src="https://img.shields.io/badge/Play-Online-success" /></a>
+    <a href="https://github.com/time2beat/mahjong-fruit/tags" target="_blank"><img src="https://img.shields.io/github/v/tag/time2beat/mahjong-fruit?label=latest%20version" /></a>
+    <a href="https://time2beat.github.io/mahjong-fruit/" target="_blank"><img src="https://img.shields.io/badge/Play-Online-success" /></a>
     <a href="https://discord.gg/tkvnz2YzW5" target="_blank"><img src="https://img.shields.io/discord/482578656229720084?label=Discord&logo=discord&logoColor=fff" /></a>
     <a href="https://ews.ink/game/mahjong-game-diy/" target="_blank"><img src="https://img.shields.io/badge/Blog-开发日志-informational?logo=hugo&logoColor=fff" /></a>
 </p>
