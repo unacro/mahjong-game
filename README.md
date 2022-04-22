@@ -1,9 +1,9 @@
 # Mahjong Game
 
 <p align="center">
-    <a href="https://github.com/time2beat/mahjong-game/tree/prototype" target="_blank"><img src="https://img.shields.io/badge/mahjong--game-prototype-success?logo=github" /></a>
-    <a href="https://github.com/time2beat/mahjong-game/releases/tag/v0.0.1-alpha-3b" target="_blank"><img src="https://img.shields.io/badge/version-v0.0.1--alpha--3b-informational" /></a>
+    <a href="https://github.com/time2beat/mahjong-game/tree/prototype" target="_blank"><img src="https://img.shields.io/badge/time2beat%2Fmahjong--game-prototype-informational?logo=github" /></a>
     <img src="https://img.shields.io/github/pipenv/locked/python-version/time2beat/mahjong-game/prototype?label=Python&logo=python&logoColor=fff" />
+    <a href="https://github.com/time2beat/mahjong-game/releases/tag/v0.0.1-alpha-3c" target="_blank"><img src="https://img.shields.io/badge/version-v0.0.1--alpha--3c-informational" /></a>
 </p>
 
 Python 无框架手写日麻
@@ -54,7 +54,7 @@ $ python mahjong/game.py
   - [ ] 番种计算：翻数 / 符数
   - [ ] 输赢计分
   - [ ] 多局游戏（半庄东南）
-- [x] ~~不考虑 UI，考虑 UI 我换 Godot 了~~ 真换了
+- [x] ~~不考虑 UI，考虑 UI 我换 Godot 了~~ [真换了](https://github.com/time2beat/mahjong-game)
 
 ### Bug 修复
 
