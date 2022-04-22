@@ -84,18 +84,23 @@ jobs:
         with:
           name: web
           path: build/web
-      # - name: 4.5. Install rsync 📚
-      #   run: |
-      #     apt-get update && apt-get install -y rsync
-      - name: 5. Deploy to distribution branch 🚀
-        uses: peaceiris/actions-gh-pages@v3
+      - name: 4. Install rsync 📚
+        run: |
+          apt-get update && apt-get install -y rsync
+      - name: 5. Deploy to GitHub Pages 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v4
         with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./build/web
-          publish_branch: dist
-          user_name: "github-actions[bot]"
-          user_email: "github-actions[bot]@users.noreply.github.com"
-          commit_message: ${{ github.event.head_commit.message }}
+          branch: dist
+          folder: build/web
+      # - name: 5. Deploy to Distribution Branch 🚀
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+      #     publish_dir: ./build/web
+      #     publish_branch: dist
+      #     user_name: "github-actions[bot]"
+      #     user_email: "github-actions[bot]@users.noreply.github.com"
+      #     commit_message: ${{ github.event.head_commit.message }}
 
   # export-mac:
   #   name: Mac Export
