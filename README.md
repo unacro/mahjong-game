@@ -7,7 +7,7 @@
     <a href="https://github.com/time2beat/mahjong-fruit/tags" target="_blank"><img src="https://img.shields.io/github/v/tag/time2beat/mahjong-fruit?label=latest" /></a>
     <a href="#play-online" target="_blank"><img src="https://img.shields.io/badge/Play-Online-success" /></a>
     <a href="https://discord.gg/tkvnz2YzW5" target="_blank"><img src="https://img.shields.io/discord/482578656229720084?label=Discord&logo=discord&logoColor=fff" /></a>
-    <a href="https://ews.ink/game/mahjong-game-diy/" target="_blank"><img src="https://img.shields.io/badge/Blog-开发日志-informational?logo=hugo?logoColor=fff" /></a>
+    <a href="https://ews.ink/game/mahjong-game-diy/" target="_blank"><img src="https://img.shields.io/badge/Blog-开发日志-informational?logo=hugo&logoColor=fff" /></a>
 </p>
 
 Godot 实现日麻游戏
