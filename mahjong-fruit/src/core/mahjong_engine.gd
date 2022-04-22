@@ -33,7 +33,8 @@ enum HANDS {
 	NINE_GATES_HAND = 1007,  # 九莲宝灯
 	GREAT_WINDS = 1008,  # 大四喜
 }
-
+# 流局: 九种九牌 四风连打 四家立直 四杠散了
+enum DRAWS { NINE_ORPHANS, QUADRA_WIND, QUADRA_RICHI, QUADRA_KONG }
 enum MAHJONG {
 	MAN_1A = 110,
 	MAN_1B = 111,
