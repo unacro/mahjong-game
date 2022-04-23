@@ -13,3 +13,8 @@
 Godot 实现日麻游戏
 
 > 详见<a href="https://ews.ink/tech/game-mahjong-diy/" target="_blank">开发日志</a>。
+
+## 鸣谢
+
+- 图片资源来自「[麻雀の画像・素材 - 来夢来人](https://www.civillink.net/fsozai/majan.html)」
+- 音效资源来自「[天鳳用オリジナル SE: アンコロキング blog](http://ancoro.way-nifty.com/blog/se.html)」

@@ -6,7 +6,7 @@ extends Control
 # Signals 信号
 ################################################################
 signal tile_discarded(tile_value)
-signal tile_called(holding_tiles)
+signal tile_called(called_data)
 
 ################################################################
 # Enums 枚举
@@ -26,6 +26,7 @@ const TILE_NODE = preload("res://src/client/ui/new_game/tile_node.tscn")
 ################################################################
 var known_dora: Array = [] setget set_known_dora
 var hand_tiles: Array = [] setget set_hand_tiles
+var tiles_count: int = -1 setget set_tiles_count
 var the_tile: int = -1 setget set_the_tile
 
 ################################################################
@@ -36,36 +37,38 @@ var the_tile: int = -1 setget set_the_tile
 # Onready variables 自动初始化变量
 ################################################################
 onready var _dora_tile_nodes = [
-	$DoraContainer/HBoxContainer/DoraTile1,
-	$DoraContainer/HBoxContainer/DoraTile2,
-	$DoraContainer/HBoxContainer/DoraTile3,
-	$DoraContainer/HBoxContainer/DoraTile4,
-	$DoraContainer/HBoxContainer/DoraTile5,
+	$CenterInfo/Panel/MarginContainer/DoraVBox/DoraHBox/Dora1,
+	$CenterInfo/Panel/MarginContainer/DoraVBox/DoraHBox/Dora2,
+	$CenterInfo/Panel/MarginContainer/DoraVBox/DoraHBox/Dora3,
+	$CenterInfo/Panel/MarginContainer/DoraVBox/DoraHBox/Dora4,
+	$CenterInfo/Panel/MarginContainer/DoraVBox/DoraHBox/Dora5,
 ]
-onready var _debug_info = $DebugInfo/Label
+onready var _debug_info = $CenterInfo/Panel/MarginContainer/TempVBox/Label
 onready var _output_history = $OutputTiles/GridContainer
 onready var _call_tile_buttons = [
-	$CallTile/Buttons/Chow,
-	$CallTile/Buttons/Pong,
-	$CallTile/Buttons/Kong,
-	$CallTile/Buttons/Win,
+	$CallTileButtons/HBoxContainer/Richi,
+	$CallTileButtons/HBoxContainer/Chow,
+	$CallTileButtons/HBoxContainer/Pong,
+	$CallTileButtons/HBoxContainer/Kong,
+	$CallTileButtons/HBoxContainer/Win,
 ]
 onready var _hand_tile_nodes = [
-	$MarginContainer/HandTiles/TileNode1,
-	$MarginContainer/HandTiles/TileNode2,
-	$MarginContainer/HandTiles/TileNode3,
-	$MarginContainer/HandTiles/TileNode4,
-	$MarginContainer/HandTiles/TileNode5,
-	$MarginContainer/HandTiles/TileNode6,
-	$MarginContainer/HandTiles/TileNode7,
-	$MarginContainer/HandTiles/TileNode8,
-	$MarginContainer/HandTiles/TileNode9,
-	$MarginContainer/HandTiles/TileNode10,
-	$MarginContainer/HandTiles/TileNode11,
-	$MarginContainer/HandTiles/TileNode12,
-	$MarginContainer/HandTiles/TileNode13,
-	$MarginContainer/HandTiles/TileNodeInput,
+	$HandTiles/HBoxContainer/TileNode1,
+	$HandTiles/HBoxContainer/TileNode2,
+	$HandTiles/HBoxContainer/TileNode3,
+	$HandTiles/HBoxContainer/TileNode4,
+	$HandTiles/HBoxContainer/TileNode5,
+	$HandTiles/HBoxContainer/TileNode6,
+	$HandTiles/HBoxContainer/TileNode7,
+	$HandTiles/HBoxContainer/TileNode8,
+	$HandTiles/HBoxContainer/TileNode9,
+	$HandTiles/HBoxContainer/TileNode10,
+	$HandTiles/HBoxContainer/TileNode11,
+	$HandTiles/HBoxContainer/TileNode12,
+	$HandTiles/HBoxContainer/TileNode13,
+	$HandTiles/HBoxContainer/TileNodeInput,
 ]
+onready var _tiles_count_label = $CenterInfo/Panel/MarginContainer/DoraVBox/RemainTileCount
 
 
 ################################################################
@@ -78,8 +81,6 @@ onready var _hand_tile_nodes = [
 func _ready() -> void:
 	for tile_node in _hand_tile_nodes:  # 启用手牌交互按钮
 		tile_node.connect("tile_released", self, "_on_TileNode_released")
-	for dora_node in _dora_tile_nodes:  # 初始化宝牌指示器
-		dora_node.material.set_shader_param("active", true)
 #	adapt_hand_tiles([110, 190, 210, 290, 310, 390, 410, 420, 430, 440, 450, 460, 470, 470])
 
 
@@ -94,9 +95,8 @@ func adapt_known_dora(tiles: Array) -> void:  # 渲染宝牌指示器
 	for i in range(len(tiles)):
 		_dora_tile_nodes[i].tile_index = Mahjong.MAHJONG_INDEX[
 				int(tiles[i] / 10)]
-		_dora_tile_nodes[i].material.set_shader_param("active", false)
 	for i in range(len(tiles), 5):  # 隐藏未知的宝牌指示器
-		_dora_tile_nodes[i].material.set_shader_param("active", true)
+		_dora_tile_nodes[i].tile_index = 34
 
 
 func adapt_hand_tiles(tiles: Array) -> void:  # 渲染手牌
@@ -140,6 +140,10 @@ func set_hand_tiles(tiles: Array) -> void:
 	adapt_hand_tiles(tiles)
 
 
+func set_tiles_count(count: int) -> void:
+	_tiles_count_label.text = "余牌: %d" % count
+
+
 func set_the_tile(tile: int) -> void:
 	var options: Dictionary = Mahjong.check_call(hand_tiles, tile)
 	if len(options) == 0:
@@ -162,17 +166,25 @@ func _on_TileNode_released(hand_index) -> void:
 	discard_tile(hand_index)
 
 
+func _on_Richi_pressed():
+	call_tile({ "type": Mahjong.CALL.RICHI, "data": [] })
+
+
 func _on_Chow_pressed() -> void:
-	print("吃")
+	var data: Dictionary = {
+		"type": Mahjong.CALL.CHOW,
+		"data": [],
+	}
+	call_tile(data)
 
 
 func _on_Pong_pressed() -> void:
-	print("碰")
+	call_tile({"type": Mahjong.CALL.PONG})
 
 
 func _on_Kong_pressed() -> void:
-	print("杠")
+	call_tile({"type": Mahjong.CALL.KONG})
 
 
 func _on_Win_pressed() -> void:
-	print("和")
+	call_tile({"type": Mahjong.CALL.WIN})

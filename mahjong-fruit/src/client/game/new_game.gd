@@ -33,6 +33,15 @@ var _player_class = null
 # Onready variables 自动初始化变量
 ################################################################
 onready var _player_ui = $Player
+onready var _se_player = {
+	"discard": $SoundEffect/Discard,
+	"chow": $SoundEffect/Chow,
+	"pong": $SoundEffect/Pong,
+	"kong": $SoundEffect/Kong,
+	"richi": $SoundEffect/Richi,
+	"win": $SoundEffect/Win,
+	"tsumo": $SoundEffect/WinBySelf,
+}
 
 
 ################################################################
@@ -44,6 +53,7 @@ onready var _player_ui = $Player
 
 func _ready():
 	_player_ui.connect("tile_discarded", self, "_on_tile_discarded")
+	_player_ui.connect("tile_called", self, "_on_tile_called")
 	player_index = 0
 	new_game()
 
@@ -60,6 +70,7 @@ func new_game() -> void:
 	_player_ui.known_dora = game.get_dora(Mahjong.DORA.OUTER)
 	_player_class = game.get_player(player_index)
 	_player_ui.hand_tiles = _player_class.hand
+	_player_ui.tiles_count = game.get_tiles_count()
 	for history_node in _player_ui._output_history.get_children():
 		history_node.queue_free()
 	$DebugInfo/MD5.text = "MD5: " + game.sequence_md5
@@ -82,7 +93,30 @@ func new_game() -> void:
 ################################################################
 func _on_tile_discarded(tile_value):
 	_player_class.discard(tile_value)
+	_se_player["discard"].play()
 	_player_ui.hand_tiles = _player_class.hand
+
+
+func _on_tile_called(data: Dictionary) -> void:
+	match data["type"]:
+		Mahjong.CALL.WIN:
+			print("玩家%d 选择 和牌" % player_index)
+			if randi() % 2:
+				_se_player["win"].play()
+			else:
+				_se_player["tsumo"].play()
+		Mahjong.CALL.KONG:
+			print("玩家%d 选择 杠" % player_index)
+			_se_player["kong"].play()
+		Mahjong.CALL.PONG:
+			print("玩家%d 选择 碰" % player_index)
+			_se_player["pong"].play()
+		Mahjong.CALL.CHOW:
+			print("玩家%d 选择 吃" % player_index)
+			_se_player["chow"].play()
+		Mahjong.CALL.RICHI:
+			print("玩家%d 选择 立直" % player_index)
+			_se_player["richi"].play()
 
 
 func _on_MD5_pressed():
@@ -111,5 +145,6 @@ func _on_Draw_pressed():
 		game.deal(player_index)
 		_player_ui.hand_tiles = _player_class.hand
 		$DebugConsole/Deck.bbcode_text = game.temp_debug_deck()
+		_player_ui.tiles_count = game.get_tiles_count()
 	else:
 		print("[DEBUG] 摸牌失败 手牌已经满了")

@@ -1,35 +1,10 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://src/client/ui/new_game/tile_node.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/client/ui/new_game/player.gd" type="Script" id=2]
 [ext_resource path="res://assets/fonts/yozai_font_24px.tres" type="DynamicFont" id=3]
 [ext_resource path="res://assets/shaders/tile_back.gdshader" type="Shader" id=4]
 [ext_resource path="res://assets/default_theme.tres" type="Theme" id=5]
-
-[sub_resource type="ShaderMaterial" id=1]
-resource_local_to_scene = true
-shader = ExtResource( 4 )
-shader_param/active = false
-
-[sub_resource type="ShaderMaterial" id=2]
-resource_local_to_scene = true
-shader = ExtResource( 4 )
-shader_param/active = false
-
-[sub_resource type="ShaderMaterial" id=3]
-resource_local_to_scene = true
-shader = ExtResource( 4 )
-shader_param/active = false
-
-[sub_resource type="ShaderMaterial" id=4]
-resource_local_to_scene = true
-shader = ExtResource( 4 )
-shader_param/active = false
-
-[sub_resource type="ShaderMaterial" id=5]
-resource_local_to_scene = true
-shader = ExtResource( 4 )
-shader_param/active = false
 
 [sub_resource type="ShaderMaterial" id=6]
 resource_local_to_scene = true
@@ -110,280 +85,366 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="DoraContainer" type="CenterContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 0.138889
-margin_bottom = -100.0
-rect_min_size = Vector2( 0, 100 )
-__meta__ = {
-"_edit_use_anchors_": true
-}
-
-[node name="HBoxContainer" type="HBoxContainer" parent="DoraContainer"]
-margin_left = 514.0
-margin_top = 18.0
-margin_right = 765.0
-margin_bottom = 81.0
-
-[node name="DoraTile1" parent="DoraContainer/HBoxContainer" instance=ExtResource( 1 )]
-material = SubResource( 1 )
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 47.0
-margin_bottom = 63.0
-
-[node name="DoraTile2" parent="DoraContainer/HBoxContainer" instance=ExtResource( 1 )]
-material = SubResource( 2 )
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 51.0
-margin_right = 98.0
-margin_bottom = 63.0
-
-[node name="DoraTile3" parent="DoraContainer/HBoxContainer" instance=ExtResource( 1 )]
-material = SubResource( 3 )
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 102.0
-margin_right = 149.0
-margin_bottom = 63.0
-
-[node name="DoraTile4" parent="DoraContainer/HBoxContainer" instance=ExtResource( 1 )]
-material = SubResource( 4 )
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 153.0
-margin_right = 200.0
-margin_bottom = 63.0
-
-[node name="DoraTile5" parent="DoraContainer/HBoxContainer" instance=ExtResource( 1 )]
-material = SubResource( 5 )
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 204.0
-margin_right = 251.0
-margin_bottom = 63.0
-
-[node name="DebugInfo" type="CenterContainer" parent="."]
+[node name="CenterInfo" type="CenterContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="Label" type="Label" parent="DebugInfo"]
-margin_left = 546.0
-margin_top = 345.0
-margin_right = 734.0
-margin_bottom = 375.0
+[node name="Panel" type="Panel" parent="CenterInfo"]
+margin_left = 480.0
+margin_top = 270.0
+margin_right = 800.0
+margin_bottom = 450.0
+rect_min_size = Vector2( 320, 180 )
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterInfo/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = -10.0
+
+[node name="MetaInfoHbox" type="HBoxContainer" parent="CenterInfo/Panel/MarginContainer"]
+margin_right = 300.0
+margin_bottom = 160.0
+alignment = 2
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MetaInfoVBox" type="VBoxContainer" parent="CenterInfo/Panel/MarginContainer/MetaInfoHbox"]
+margin_left = 218.0
+margin_right = 300.0
+margin_bottom = 160.0
+
+[node name="TitleLabel" type="Label" parent="CenterInfo/Panel/MarginContainer/MetaInfoHbox/MetaInfoVBox"]
+margin_right = 82.0
+margin_bottom = 30.0
+custom_fonts/font = ExtResource( 3 )
+text = "东一局"
+
+[node name="TimesLabel" type="Label" parent="CenterInfo/Panel/MarginContainer/MetaInfoHbox/MetaInfoVBox"]
+margin_top = 34.0
+margin_right = 82.0
+margin_bottom = 54.0
+text = "本场数 × 0"
+
+[node name="ReachLabel" type="Label" parent="CenterInfo/Panel/MarginContainer/MetaInfoHbox/MetaInfoVBox"]
+margin_top = 58.0
+margin_right = 82.0
+margin_bottom = 78.0
+text = "点棒数 × 0"
+
+[node name="DoraVBox" type="VBoxContainer" parent="CenterInfo/Panel/MarginContainer"]
+margin_right = 300.0
+margin_bottom = 160.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="DoraHBox" type="HBoxContainer" parent="CenterInfo/Panel/MarginContainer/DoraVBox"]
+margin_right = 300.0
+margin_bottom = 56.0
+
+[node name="Dora1" parent="CenterInfo/Panel/MarginContainer/DoraVBox/DoraHBox" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 40.0
+margin_bottom = 56.0
+
+[node name="Dora2" parent="CenterInfo/Panel/MarginContainer/DoraVBox/DoraHBox" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 44.0
+margin_right = 84.0
+margin_bottom = 56.0
+
+[node name="Dora3" parent="CenterInfo/Panel/MarginContainer/DoraVBox/DoraHBox" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 88.0
+margin_right = 128.0
+margin_bottom = 56.0
+
+[node name="Dora4" parent="CenterInfo/Panel/MarginContainer/DoraVBox/DoraHBox" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 132.0
+margin_right = 172.0
+margin_bottom = 56.0
+
+[node name="Dora5" parent="CenterInfo/Panel/MarginContainer/DoraVBox/DoraHBox" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 176.0
+margin_right = 216.0
+margin_bottom = 56.0
+
+[node name="RemainTileCount" type="Label" parent="CenterInfo/Panel/MarginContainer/DoraVBox"]
+margin_top = 60.0
+margin_right = 300.0
+margin_bottom = 80.0
+text = "余牌: -1"
+
+[node name="GridContainer" type="GridContainer" parent="CenterInfo/Panel/MarginContainer/DoraVBox"]
+margin_top = 84.0
+margin_right = 300.0
+margin_bottom = 128.0
+columns = 2
+
+[node name="NPoints" type="Label" parent="CenterInfo/Panel/MarginContainer/DoraVBox/GridContainer"]
+margin_right = 88.0
+margin_bottom = 20.0
+text = "北家: 25000"
+
+[node name="WPoints" type="Label" parent="CenterInfo/Panel/MarginContainer/DoraVBox/GridContainer"]
+margin_left = 92.0
+margin_right = 180.0
+margin_bottom = 20.0
+text = "西家: 25000"
+
+[node name="EPoints" type="Label" parent="CenterInfo/Panel/MarginContainer/DoraVBox/GridContainer"]
+margin_top = 24.0
+margin_right = 88.0
+margin_bottom = 44.0
+custom_colors/font_color = Color( 0.266667, 0.807843, 0.109804, 1 )
+text = "东家: 25000"
+
+[node name="SPoints" type="Label" parent="CenterInfo/Panel/MarginContainer/DoraVBox/GridContainer"]
+margin_left = 92.0
+margin_top = 24.0
+margin_right = 180.0
+margin_bottom = 44.0
+text = "南家: 25000"
+
+[node name="TempVBox" type="VBoxContainer" parent="CenterInfo/Panel/MarginContainer"]
+margin_right = 300.0
+margin_bottom = 160.0
+alignment = 2
+
+[node name="Label" type="Label" parent="CenterInfo/Panel/MarginContainer/TempVBox"]
+margin_top = 130.0
+margin_right = 300.0
+margin_bottom = 160.0
 custom_fonts/font = ExtResource( 3 )
 text = "DEBUG 调试信息"
 
 [node name="OutputTiles" type="CenterContainer" parent="."]
-anchor_left = 0.316406
-anchor_top = 0.555556
-anchor_right = 0.683594
-anchor_bottom = 0.818056
-margin_top = -3.05176e-05
+anchor_left = 0.375
+anchor_top = 0.638889
+anchor_right = 0.625
+anchor_bottom = 0.861111
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
 [node name="GridContainer" type="GridContainer" parent="OutputTiles"]
-margin_left = 235.0
-margin_top = 94.0
-margin_right = 235.0
-margin_bottom = 94.0
-columns = 10
+margin_left = 160.0
+margin_top = 80.0
+margin_right = 160.0
+margin_bottom = 80.0
+columns = 7
 
-[node name="CallTile" type="CenterContainer" parent="."]
-anchor_left = 0.703125
-anchor_top = 0.722222
-anchor_right = 0.890625
-anchor_bottom = 0.791667
+[node name="CallTileButtons" type="CenterContainer" parent="."]
+anchor_left = 0.625
+anchor_top = 0.777778
+anchor_right = 0.8125
+anchor_bottom = 0.847223
 __meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true,
 "_edit_use_anchors_": true
 }
 
-[node name="Buttons" type="HBoxContainer" parent="CallTile"]
-margin_left = 120.0
-margin_top = 25.0
-margin_right = 120.0
-margin_bottom = 25.0
-alignment = 2
+[node name="HBoxContainer" type="HBoxContainer" parent="CallTileButtons"]
+margin_left = 18.0
+margin_top = 7.0
+margin_right = 222.0
+margin_bottom = 43.0
 
-[node name="Chow" type="Button" parent="CallTile/Buttons"]
-visible = false
-margin_right = 36.0
+[node name="Richi" type="Button" parent="CallTileButtons/HBoxContainer"]
+margin_right = 44.0
+margin_bottom = 36.0
+text = "立直"
+
+[node name="Chow" type="Button" parent="CallTileButtons/HBoxContainer"]
+margin_left = 48.0
+margin_right = 84.0
 margin_bottom = 36.0
 custom_fonts/font = ExtResource( 3 )
 text = "吃"
 
-[node name="Pong" type="Button" parent="CallTile/Buttons"]
-visible = false
-margin_right = 36.0
+[node name="Pong" type="Button" parent="CallTileButtons/HBoxContainer"]
+margin_left = 88.0
+margin_right = 124.0
 margin_bottom = 36.0
 custom_fonts/font = ExtResource( 3 )
 text = "碰"
 
-[node name="Kong" type="Button" parent="CallTile/Buttons"]
-visible = false
-margin_right = 36.0
+[node name="Kong" type="Button" parent="CallTileButtons/HBoxContainer"]
+margin_left = 128.0
+margin_right = 164.0
 margin_bottom = 36.0
 custom_fonts/font = ExtResource( 3 )
 text = "杠"
 
-[node name="Win" type="Button" parent="CallTile/Buttons"]
-visible = false
-margin_right = 36.0
+[node name="Win" type="Button" parent="CallTileButtons/HBoxContainer"]
+margin_left = 168.0
+margin_right = 204.0
 margin_bottom = 36.0
 custom_fonts/font = ExtResource( 3 )
 text = "和"
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-anchor_left = 0.15625
-anchor_top = 0.833333
-anchor_right = 0.84375
-anchor_bottom = 0.920833
+[node name="HandTiles" type="MarginContainer" parent="."]
+anchor_left = 0.234375
+anchor_top = 0.866667
+anchor_right = 0.765625
+anchor_bottom = 0.944444
 __meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true,
 "_edit_use_anchors_": true
 }
 
-[node name="HandTiles" type="HBoxContainer" parent="MarginContainer"]
-margin_right = 880.0
-margin_bottom = 63.0
+[node name="HBoxContainer" type="HBoxContainer" parent="HandTiles"]
+margin_right = 680.0
+margin_bottom = 56.0
 alignment = 2
 
-[node name="TileNode1" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode1" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 6 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 126.0
-margin_right = 173.0
-margin_bottom = 63.0
+margin_left = 44.0
+margin_right = 84.0
+margin_bottom = 56.0
 index = 0
 
-[node name="TileNode2" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode2" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 7 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 177.0
-margin_right = 224.0
-margin_bottom = 63.0
+margin_left = 88.0
+margin_right = 128.0
+margin_bottom = 56.0
 index = 1
 
-[node name="TileNode3" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode3" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 8 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 228.0
-margin_right = 275.0
-margin_bottom = 63.0
+margin_left = 132.0
+margin_right = 172.0
+margin_bottom = 56.0
 index = 2
 
-[node name="TileNode4" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode4" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 9 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 279.0
-margin_right = 326.0
-margin_bottom = 63.0
+margin_left = 176.0
+margin_right = 216.0
+margin_bottom = 56.0
 index = 3
 
-[node name="TileNode5" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode5" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 10 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 330.0
-margin_right = 377.0
-margin_bottom = 63.0
+margin_left = 220.0
+margin_right = 260.0
+margin_bottom = 56.0
 index = 4
 
-[node name="TileNode6" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode6" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 11 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 381.0
-margin_right = 428.0
-margin_bottom = 63.0
+margin_left = 264.0
+margin_right = 304.0
+margin_bottom = 56.0
 index = 5
 
-[node name="TileNode7" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode7" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 12 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 432.0
-margin_right = 479.0
-margin_bottom = 63.0
+margin_left = 308.0
+margin_right = 348.0
+margin_bottom = 56.0
 index = 6
 
-[node name="TileNode8" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode8" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 13 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 483.0
-margin_right = 530.0
-margin_bottom = 63.0
+margin_left = 352.0
+margin_right = 392.0
+margin_bottom = 56.0
 index = 7
 
-[node name="TileNode9" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode9" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 14 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 534.0
-margin_right = 581.0
-margin_bottom = 63.0
+margin_left = 396.0
+margin_right = 436.0
+margin_bottom = 56.0
 index = 8
 
-[node name="TileNode10" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode10" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 15 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 585.0
-margin_right = 632.0
-margin_bottom = 63.0
+margin_left = 440.0
+margin_right = 480.0
+margin_bottom = 56.0
 index = 9
 
-[node name="TileNode11" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode11" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 16 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 636.0
-margin_right = 683.0
-margin_bottom = 63.0
+margin_left = 484.0
+margin_right = 524.0
+margin_bottom = 56.0
 index = 10
 
-[node name="TileNode12" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode12" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 17 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 687.0
-margin_right = 734.0
-margin_bottom = 63.0
+margin_left = 528.0
+margin_right = 568.0
+margin_bottom = 56.0
 index = 11
 
-[node name="TileNode13" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNode13" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 18 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 738.0
-margin_right = 785.0
-margin_bottom = 63.0
+margin_left = 572.0
+margin_right = 612.0
+margin_bottom = 56.0
 index = 12
 
-[node name="Separator" type="Control" parent="MarginContainer/HandTiles"]
-margin_left = 789.0
-margin_right = 829.0
-margin_bottom = 63.0
-rect_min_size = Vector2( 40, 63 )
+[node name="Separator" type="Control" parent="HandTiles/HBoxContainer"]
+margin_left = 616.0
+margin_right = 636.0
+margin_bottom = 56.0
+rect_min_size = Vector2( 20, 56 )
 
-[node name="TileNodeInput" parent="MarginContainer/HandTiles" instance=ExtResource( 1 )]
+[node name="TileNodeInput" parent="HandTiles/HBoxContainer" instance=ExtResource( 1 )]
 material = SubResource( 20 )
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 833.0
-margin_right = 880.0
-margin_bottom = 63.0
+margin_left = 640.0
+margin_right = 680.0
+margin_bottom = 56.0
 index = 13
 
-[connection signal="pressed" from="CallTile/Buttons/Chow" to="." method="_on_Chow_pressed"]
-[connection signal="pressed" from="CallTile/Buttons/Pong" to="." method="_on_Pong_pressed"]
-[connection signal="pressed" from="CallTile/Buttons/Kong" to="." method="_on_Kong_pressed"]
-[connection signal="pressed" from="CallTile/Buttons/Win" to="." method="_on_Win_pressed"]
+[connection signal="pressed" from="CallTileButtons/HBoxContainer/Richi" to="." method="_on_Richi_pressed"]
+[connection signal="pressed" from="CallTileButtons/HBoxContainer/Chow" to="." method="_on_Chow_pressed"]
+[connection signal="pressed" from="CallTileButtons/HBoxContainer/Pong" to="." method="_on_Pong_pressed"]
+[connection signal="pressed" from="CallTileButtons/HBoxContainer/Kong" to="." method="_on_Kong_pressed"]
+[connection signal="pressed" from="CallTileButtons/HBoxContainer/Win" to="." method="_on_Win_pressed"]

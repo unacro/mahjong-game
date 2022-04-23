@@ -10,7 +10,8 @@ extends Reference
 ################################################################
 # Enums 枚举
 ################################################################
-enum CALL { CHOW, PONG, KONG, WIN }  # 鸣牌: 吃 碰 杠 和
+enum MAP_METHOD { LONG, STANDARD, SHORT }
+enum CALL { RICHI, CHOW, PONG, KONG, WIN }  # 鸣牌: 立直 吃 碰 杠 和
 enum DORA { OUTER, INNER, RINSHAN, SEAFLOOR }  # 宝牌指示器 里宝 岭上 海底
 enum HANDS {
 	# Other special high-scoring hands
@@ -307,19 +308,37 @@ static func new_deck(enable_sequence: bool = false):
 		return new_deck
 
 
-static func deal(sequence: String, player: int = 0) -> Array:
+static func deal(sequence: String, player: int, count: int = 4) -> Array:
 	var deck: Array = deserialize(sequence)
-	var hand: Array = []
-	for i in range(3):
-		hand.append_array(
-				deck.slice(i * 16 + player * 4, i * 16 + player * 4 + 3))
-	if player == 0:
-		hand.append(deck[48])
-		hand.append(deck[52])
+	var s: int = 3  # 每人基础三墩 4 * 3 = 12 张
+	if count <= 1:
+		return []
+	# 兼容两家 / 三家 / 五家等非常规玩家数量
+	if player >= 0 and player < count:
+		var hand: Array = []
+		for i in range(s):
+			hand.append_array(deck.slice(
+					i * count * 4 + player * 4,
+					i * count * 4 + player * 4 + 3))
+		if player == 0:
+			hand.append(deck[count * s * 4 + player])
+			hand.append(deck[count * s * 4 + 4])  # 庄家跳牌固定为4 而不是count
+		elif player < 4:
+			hand.append(deck[count * s * 4 + player])
+		else:
+			hand.append(deck[count * s * 4 + player + 1])
+		hand.sort()
+		return hand  # 返回手牌
 	else:
-		hand.append(deck[player + 48])
-	hand.sort()
-	return hand
+		var mountain: Array = []
+		# warning-ignore:narrowing_conversion
+		var t = deck.slice(count * s * 4 + max(count, 4) + 1, len(deck) - 15)
+		if count < 4:
+			mountain = deck.slice(count * s * 4 + count, count * s * 4 + 3)
+			mountain.append_array(t)
+		else:
+			mountain = t
+		return mountain  # 返回山牌
 
 
 static func get_dora(sequence: String, dora_type: int) -> Array:
@@ -338,9 +357,26 @@ static func get_dora(sequence: String, dora_type: int) -> Array:
 	return dora
 
 
-static func check_win(tiles: Array) -> bool:
-	if len(tiles) % 3 != 2:
+static func check_win(tiles) -> bool:
+	var hand: Array = []
+	match typeof(tiles):
+		TYPE_ARRAY:
+			if len(tiles) % 3 == 2:
+				hand = tiles.duplicate(true)
+		TYPE_STRING:
+			if len(tiles) % 6 == 4:
+				hand = deserialize(tiles)
+	if hand.empty():
+		printerr("判断和牌失败 解析手牌数据时发生错误")
 		return false
+	
+	print("[DEBUG] 手牌为=[%s]" % Utils.array_join(hand, " "))
+
+	var map_res: Array = _map_tiles_to_count(hand)
+#	print("[DEBUG] 映射为数量数组 ", Utils.array_join(_map_tiles_to_count(hand, MAP_METHOD.SHORT)))
+	# warning-ignore:return_value_discarded
+	_map_count_to_index(map_res)
+	
 	return false
 
 
@@ -386,27 +422,97 @@ static func check_call(hand: Array, tile: int) -> Dictionary:
 ################################################################
 # Private methods 私有函数
 ################################################################
-func _gen_enum_script() -> void:
-	var suits: Array = [null, "MAN", "PIN", "SO", "ZI"]
-	var indexes: Array = ["A", "B", "C", "D"]
-	var text: String = ""
-	for s in range(1, 5):
-		for i in range(1, 10):
-			for j in range(4):
-				text += "	" + suits[s] + "_" + str(i) + indexes[j]
-				text += " = " + str(s * 100 + i * 10 + j) + ",\n"
-	OS.clipboard = text
+static func _map_count_to_index(count_map: Array, _pos: Array = []) -> int:
+	var p: int = -1  # pointer 类似打字机撞针 指向当前操作的位数
+	var res: int = 0
+	#var pos_index: int = 0
+	var last_gt_zero: bool = false # ひとつ前が0以外
+	# 数牌
+	for i in range(3):
+		for j in range(9):
+			if count_map[i * 9 + j] == 0:
+				if last_gt_zero:
+					res |= 0x1 << p  # 0b0001
+					p += 1
+					last_gt_zero = false
+			else:
+				last_gt_zero = true
+				p += 1
+				#pos_index += 1
+				#pos[pos_index] = i * 9 + j
+				match count_map[i * 9 + j]:
+					2:
+						res |= 0x3 << p  # 0b0011
+						p += 2
+					3:
+						res |= 0xF << p  # 0b1111
+						p += 4
+					4:
+						res |= 0x3F << p  # 0b0011_1111
+						p += 6
+		if last_gt_zero:
+			last_gt_zero = false
+			res |= 0x1 << p  # 0b0001
+			p += 1
+	# 字牌
+	for i in range(27, 34):
+		if count_map[i] > 0:
+			p += 1
+			#pos_index += 1
+			#pos[pos_index] = i
+			match count_map[i]:
+				2:
+					res |= 0x3 << p  # 0b0011
+					p += 2
+				3:
+					res |= 0xF << p  # 0b1111
+					p += 4
+				4:
+					res |= 0x3F << p  # 0b0011_1111
+					p += 6
+			res |= 0x1 << p  # 0b0001
+			p += 1
+	print("[DEBUG] 映射的索引为 0b%s" % Utils.dec_to_bin(res))
+	return res
 
 
-func _gen_const_script() -> void:
-	var text: String = ""
-	var count: int = 0
-	for i in range(1, 5):
-		for j in range(1, 10):
-			text += "	{0}: {1},\n".format([i * 10 + j, count])
-			count += 1
-	OS.clipboard = text
-	print("生成的常量脚本已复制到剪切板")
+static func _map_tiles_to_count(tiles: Array,
+		map_method: int = MAP_METHOD.STANDARD) -> Array:
+	var standard_map: Array = []
+	for _i in range(34):
+		standard_map.append(0)
+	for tile in tiles:
+		standard_map[MAHJONG_INDEX[int(tile / 10)]] += 1
+	match map_method:
+		MAP_METHOD.LONG:
+			var long_map: Array = [0]
+			for i in range(3):
+				long_map.append_array(standard_map.slice(i * 9, i * 9 + 8))
+				long_map.append(0)
+			long_map.append_array(standard_map.slice(27, 33))
+			long_map.append(0)
+			return long_map  # length = 39
+		MAP_METHOD.SHORT:
+			var short_map: Array = []
+			var last_append_is_zero: bool = true
+			for i in range(27):
+				if standard_map[i] > 0:
+					if i % 9 == 0 and i > 0 and standard_map[i - 1] > 0:
+						short_map.append(0)
+					short_map.append(standard_map[i])
+					last_append_is_zero = false
+				elif not last_append_is_zero:
+					short_map.append(0)
+					last_append_is_zero = true
+			var tail: int = short_map.pop_back()
+			if tail > 0:
+				short_map.append(tail)
+			if standard_map.slice(27, 33).max() > 0:
+				for i in range(27, 34):
+					if standard_map[i] > 0:
+						short_map.append_array([0, standard_map[i]])
+			return short_map  # unsized
+	return standard_map  # length = 34
 
 
 ################################################################

@@ -50,6 +50,40 @@ func _ready():
 ################################################################
 # Public methods 公共函数
 ################################################################
+func dec_to_bin(dec: int) -> String:
+	var temp_stack: Array = []
+	var bin_string: String = ""
+	while dec > 0:
+		temp_stack.append(dec % 2)
+		# warning-ignore:integer_division
+		dec = int(dec / 2)
+	while len(temp_stack) > 0:
+		bin_string += str(temp_stack.pop_back())
+	return bin_string
+
+
+func array_join(seq: Array, sep: String = "") -> String:
+	var temp: String = ""
+	for item in seq:
+		temp += "{0}{1}".format([item, sep])
+	return temp.trim_suffix(sep)
+
+
+func init_array(target = 0, fill_with = null, deep: bool = false) -> Array:
+	var arr: Array = []
+	match typeof(target):
+		TYPE_INT:
+			for _i in range(target):
+				arr.append(fill_with)
+		TYPE_ARRAY:
+			if deep:
+				for i in range(len(target)):
+					arr[i] = fill_with
+			else:
+				for i in range(len(target)):
+					target[i] = fill_with
+				arr = target
+	return arr
 
 
 ################################################################

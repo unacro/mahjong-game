@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/dahai.wav-9c3aab1c6d47f908f49591eb1cc2eda1.sample"
+
+[deps]
+
+source_file="res://assets/sounds/dahai.wav"
+dest_files=[ "res://.import/dahai.wav-9c3aab1c6d47f908f49591eb1cc2eda1.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

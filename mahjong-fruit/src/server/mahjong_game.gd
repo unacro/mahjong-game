@@ -30,7 +30,7 @@ var kong_count: int = 0
 # Private variables 私有变量
 ################################################################
 var _deck_sequence: String = ""
-var _mountain: Array = []
+var _tiles_wall: Array = []
 var _player_list: Array = []
 
 ################################################################
@@ -52,12 +52,12 @@ class Player:
 		output.append(tile)
 		hand.remove(hand.find(tile))
 		hand.sort()
-		print("[DEBUG] 打出=", tile, " 剩余手牌=", hand, " ", len(hand))
+		print("[DEBUG] 打出=", tile, " 剩余", len(hand), "手牌=", hand)
 	
 	func draw(tile: int) -> void:
 		input.append(tile)
 		hand.append(tile)
-		print("[DEBUG] 摸到=", tile, " 当前手牌=", hand, " ", len(hand))
+		print("[DEBUG] 摸到=", tile, " 当前", len(hand), "手牌=", hand)
 
 
 ################################################################
@@ -67,7 +67,7 @@ func _init():
 	randomize()
 	_deck_sequence = Mahjong.new_deck(true)
 	sequence_md5 = _deck_sequence.md5_text()
-	_mountain = Mahjong.deserialize(_deck_sequence).slice(53, 121)
+	_tiles_wall = Mahjong.deal(_deck_sequence, -1)
 	for i in range(4):
 		_player_list.append(Player.new(Mahjong.deal(_deck_sequence, i)))
 
@@ -101,28 +101,33 @@ func get_dora(dora_type: int):
 	return null
 
 
-func deal(player_index: int):
-	_player_list[player_index].draw(_mountain.pop_front())
+func get_tiles_count() -> int:
+	return len(_tiles_wall)
+
+
+func deal(player_index: int) -> void:
+	_player_list[player_index].draw(_tiles_wall.pop_front())
 
 
 func temp_debug_deck():
-	var full_mountain: Array = Mahjong.deserialize(_deck_sequence).slice(53, 121)
+	var deck: Array = Mahjong.deserialize(_deck_sequence)
+	var full_tiles_wall: Array = Mahjong.deal(_deck_sequence, -1)
 	var shan_pai: String = ""
-	for i in range(len(full_mountain)):
+	for i in range(len(full_tiles_wall)):
 		if i > 63:
 			if i < 68 - kong_count:
-				shan_pai += "%d " % full_mountain[i]
+				shan_pai += "%d " % full_tiles_wall[i]
 			elif i == 68 - kong_count:
-				shan_pai += "[color=#2196f3][u]%d[/u][/color] " % full_mountain[i]
+				shan_pai += "[color=#2196f3][u]%d[/u][/color] " % full_tiles_wall[i]
 			else:
-				shan_pai += "[color=#82b1ff][s]%d[/s][/color] " % full_mountain[i]
-		elif i < len(full_mountain) - len(_mountain):
-			shan_pai += "[color=#9e9e9e][s]%d[/s][/color] " % full_mountain[i]
-		elif i == len(full_mountain) - len(_mountain):
-			shan_pai += "[color=#00bcd4][u]%d[/u][/color] " % full_mountain[i]
+				shan_pai += "[color=#82b1ff][s]%d[/s][/color] " % full_tiles_wall[i]
+		elif i < len(full_tiles_wall) - len(_tiles_wall):
+			shan_pai += "[color=#9e9e9e][s]%d[/s][/color] " % full_tiles_wall[i]
+		elif i == len(full_tiles_wall) - len(_tiles_wall):
+			shan_pai += "[color=#00bcd4][u]%d[/u][/color] " % full_tiles_wall[i]
 		else:
-			shan_pai += "%d " % full_mountain[i]
-	var full_ace: Array = Mahjong.deserialize(_deck_sequence).slice(122, 136)
+			shan_pai += "%d " % full_tiles_wall[i]
+	var full_ace: Array = deck.slice(122, 136)
 	var wang_pai: String = ""
 	for i in range(len(full_ace)):
 		if i < 10:
@@ -144,7 +149,7 @@ func temp_debug_deck():
 			else:
 				wang_pai += "[color=#b9f6ca][s]%d[/s][/color] " % full_ace[i]
 	return "本局山牌({0}): {1}\n本局王牌(14): {2}".format([
-			len(_mountain), shan_pai, wang_pai])
+			len(_tiles_wall), shan_pai, wang_pai])
 ################################################################
 # Private methods 私有函数
 ################################################################

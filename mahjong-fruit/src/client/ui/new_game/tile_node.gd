@@ -45,8 +45,7 @@ onready var _sprite = $AnimatedSprite
 
 func _ready():
 	var sfs = _sprite.frames
-	_sprite.scale = rect_size / sfs.get_frame(
-			sfs.get_animation_names()[0], 0).get_size()
+	_sprite.scale = rect_size / sfs.get_frame("v2_80x112_38", 0).get_size()
 
 
 #func _process(delta):
