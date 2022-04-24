@@ -1,6 +1,6 @@
 class_name Mahjong
 extends Reference
-# docstring 文档说明
+# 麻将基础类
 
 
 ################################################################
@@ -250,6 +250,17 @@ const MAHJONG_INDEX = {
 ################################################################
 # Public methods 公共函数
 ################################################################
+static func index_of(tile: int) -> int:
+	# warning-ignore:integer_division
+	var index = int(tile / 10)
+	if tile % 100 == 53 and tile < 400:
+		# warning-ignore:integer_division
+		return int(tile / 100) + 34  # 赤宝牌
+	elif MAHJONG_INDEX.has(index):
+		return MAHJONG_INDEX[index]
+	return 34
+
+
 static func ord_at(tile: int) -> String:
 	var suit: Array = ["m", "p", "s", "z"]
 	if tile % 100 == 53 and tile < 400:

@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://src/client/ui/ui_tile.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/client/ui/ui_dora.gd" type="Script" id=2]
+
+[node name="DoraTiles" type="MarginContainer"]
+anchor_right = 0.16875
+anchor_bottom = 0.0777778
+margin_bottom = -3.8147e-06
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="HboxContainer" type="HBoxContainer" parent="."]
+margin_right = 216.0
+margin_bottom = 56.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="Dora1" parent="HboxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 40.0
+margin_bottom = 56.0
+
+[node name="Dora2" parent="HboxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 44.0
+margin_right = 84.0
+margin_bottom = 56.0
+
+[node name="Dora3" parent="HboxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 88.0
+margin_right = 128.0
+margin_bottom = 56.0
+
+[node name="Dora4" parent="HboxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 132.0
+margin_right = 172.0
+margin_bottom = 56.0
+
+[node name="Dora5" parent="HboxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 176.0
+margin_right = 216.0
+margin_bottom = 56.0

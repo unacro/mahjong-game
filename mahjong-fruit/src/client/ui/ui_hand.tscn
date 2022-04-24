@@ -1,0 +1,212 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://assets/shaders/tile_back.gdshader" type="Shader" id=1]
+[ext_resource path="res://src/client/ui/ui_tile.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/client/ui/ui_hand.gd" type="Script" id=3]
+
+[sub_resource type="ShaderMaterial" id=6]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=7]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=8]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=9]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=10]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=11]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=12]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=13]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=14]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=15]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=16]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=17]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=18]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[sub_resource type="ShaderMaterial" id=20]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/active = false
+
+[node name="HandTiles" type="MarginContainer"]
+anchor_right = 0.53125
+anchor_bottom = 0.0777778
+margin_bottom = -3.8147e-06
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_right = 680.0
+margin_bottom = 56.0
+alignment = 2
+
+[node name="TileNode1" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 6 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 44.0
+margin_right = 84.0
+margin_bottom = 56.0
+
+[node name="TileNode2" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 7 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 88.0
+margin_right = 128.0
+margin_bottom = 56.0
+
+[node name="TileNode3" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 8 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 132.0
+margin_right = 172.0
+margin_bottom = 56.0
+
+[node name="TileNode4" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 9 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 176.0
+margin_right = 216.0
+margin_bottom = 56.0
+
+[node name="TileNode5" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 10 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 220.0
+margin_right = 260.0
+margin_bottom = 56.0
+
+[node name="TileNode6" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 11 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 264.0
+margin_right = 304.0
+margin_bottom = 56.0
+
+[node name="TileNode7" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 12 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 308.0
+margin_right = 348.0
+margin_bottom = 56.0
+
+[node name="TileNode8" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 13 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 352.0
+margin_right = 392.0
+margin_bottom = 56.0
+
+[node name="TileNode9" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 14 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 396.0
+margin_right = 436.0
+margin_bottom = 56.0
+
+[node name="TileNode10" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 15 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 440.0
+margin_right = 480.0
+margin_bottom = 56.0
+
+[node name="TileNode11" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 16 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 484.0
+margin_right = 524.0
+margin_bottom = 56.0
+
+[node name="TileNode12" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 17 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 528.0
+margin_right = 568.0
+margin_bottom = 56.0
+
+[node name="TileNode13" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 18 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 572.0
+margin_right = 612.0
+margin_bottom = 56.0
+
+[node name="SeparatorGap" type="MarginContainer" parent="HBoxContainer"]
+margin_left = 616.0
+margin_right = 636.0
+margin_bottom = 56.0
+rect_min_size = Vector2( 20, 0 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="TileNodeInput" parent="HBoxContainer" instance=ExtResource( 2 )]
+material = SubResource( 20 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 640.0
+margin_right = 680.0
+margin_bottom = 56.0

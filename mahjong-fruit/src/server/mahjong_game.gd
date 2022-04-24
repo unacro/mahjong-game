@@ -83,6 +83,10 @@ func _init():
 ################################################################
 # Public methods 公共函数
 ################################################################
+static func next_player(index: int, offset: int = 1, count: int = 4) -> int:
+	return (index + offset) % count
+
+
 func get_player(player_index: int):
 	return _player_list[player_index]
 
@@ -103,6 +107,22 @@ func get_dora(dora_type: int):
 
 func get_tiles_count() -> int:
 	return len(_tiles_wall)
+
+
+func get_discard_history() -> Array:
+	# TODO 将进张/舍张记录移出 玩家类
+	var history: Array = []
+	for i in range(len(_player_list)):
+		history.append(_player_list[i].output)
+	return history
+
+
+func get_melds_data() -> Array:
+	# TODO 将副露信息移出 玩家类
+	var melds_data: Array = []
+	for i in range(len(_player_list)):
+		melds_data.append(_player_list[i].gate)
+	return melds_data
 
 
 func deal(player_index: int) -> void:

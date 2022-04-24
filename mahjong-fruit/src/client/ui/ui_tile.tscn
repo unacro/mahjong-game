@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://src/client/ui/ui_tile_sprite.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/client/ui/ui_tile.gd" type="Script" id=2]
+
+[node name="TileNode" type="MarginContainer"]
+anchor_right = 0.03125
+anchor_bottom = 0.0777778
+margin_bottom = -3.8147e-06
+rect_min_size = Vector2( 40, 56 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="TileSprite" parent="." instance=ExtResource( 1 )]
+
+[connection signal="gui_input" from="." to="." method="_on_TileSprite_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_TileSprite_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_TileSprite_mouse_exited"]
