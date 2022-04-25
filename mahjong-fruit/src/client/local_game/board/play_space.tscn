@@ -1,25 +1,25 @@
 [gd_scene load_steps=15 format=2]
 
-[ext_resource path="res://src/client/ui/ui_dora.tscn" type="PackedScene" id=1]
-[ext_resource path="res://src/client/ui/ui_play_space.gd" type="Script" id=2]
-[ext_resource path="res://assets/fonts/yozai_font_24px.tres" type="DynamicFont" id=3]
-[ext_resource path="res://src/client/ui/ui_hand.tscn" type="PackedScene" id=4]
-[ext_resource path="res://assets/default_theme.tres" type="Theme" id=5]
-[ext_resource path="res://assets/sounds/kan.wav" type="AudioStream" id=6]
-[ext_resource path="res://assets/sounds/dahai.wav" type="AudioStream" id=7]
-[ext_resource path="res://assets/sounds/richi.wav" type="AudioStream" id=8]
+[ext_resource path="res://src/client/ui/ui_meld.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/client/ui/ui_hand.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/client/ui/ui_output.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/client/ui/ui_dora.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/big_button_theme.tres" type="Theme" id=5]
+[ext_resource path="res://assets/fonts/yozai_font_24px.tres" type="DynamicFont" id=6]
+[ext_resource path="res://assets/sounds/tsumo.wav" type="AudioStream" id=7]
+[ext_resource path="res://assets/sounds/dahai.wav" type="AudioStream" id=8]
 [ext_resource path="res://assets/sounds/chii.wav" type="AudioStream" id=9]
-[ext_resource path="res://assets/sounds/ron.wav" type="AudioStream" id=10]
-[ext_resource path="res://assets/sounds/tsumo.wav" type="AudioStream" id=11]
-[ext_resource path="res://assets/sounds/pon.wav" type="AudioStream" id=12]
-[ext_resource path="res://src/client/ui/ui_output.tscn" type="PackedScene" id=13]
-[ext_resource path="res://src/client/ui/ui_meld.tscn" type="PackedScene" id=14]
+[ext_resource path="res://assets/sounds/pon.wav" type="AudioStream" id=10]
+[ext_resource path="res://assets/sounds/richi.wav" type="AudioStream" id=11]
+[ext_resource path="res://assets/sounds/kan.wav" type="AudioStream" id=12]
+[ext_resource path="res://assets/sounds/ron.wav" type="AudioStream" id=13]
+[ext_resource path="res://src/client/local_game/board/play_space.gd" type="Script" id=14]
 
 [node name="PlaySpace" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 5 )
-script = ExtResource( 2 )
+script = ExtResource( 14 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -27,25 +27,25 @@ __meta__ = {
 [node name="SoundEffect" type="Node" parent="."]
 
 [node name="Discard" type="AudioStreamPlayer" parent="SoundEffect"]
-stream = ExtResource( 7 )
+stream = ExtResource( 8 )
 
 [node name="Chow" type="AudioStreamPlayer" parent="SoundEffect"]
 stream = ExtResource( 9 )
 
 [node name="Pong" type="AudioStreamPlayer" parent="SoundEffect"]
-stream = ExtResource( 12 )
-
-[node name="Kong" type="AudioStreamPlayer" parent="SoundEffect"]
-stream = ExtResource( 6 )
-
-[node name="Richi" type="AudioStreamPlayer" parent="SoundEffect"]
-stream = ExtResource( 8 )
-
-[node name="Win" type="AudioStreamPlayer" parent="SoundEffect"]
 stream = ExtResource( 10 )
 
-[node name="WinBySelf" type="AudioStreamPlayer" parent="SoundEffect"]
+[node name="Kong" type="AudioStreamPlayer" parent="SoundEffect"]
+stream = ExtResource( 12 )
+
+[node name="Richi" type="AudioStreamPlayer" parent="SoundEffect"]
 stream = ExtResource( 11 )
+
+[node name="Win" type="AudioStreamPlayer" parent="SoundEffect"]
+stream = ExtResource( 13 )
+
+[node name="WinBySelf" type="AudioStreamPlayer" parent="SoundEffect"]
+stream = ExtResource( 7 )
 
 [node name="CenterInfo" type="CenterContainer" parent="."]
 anchor_right = 1.0
@@ -72,19 +72,19 @@ __meta__ = {
 
 [node name="MetaInfoHbox" type="HBoxContainer" parent="CenterInfo/Panel/MarginContainer"]
 margin_right = 300.0
-margin_bottom = 160.0
+margin_bottom = 159.0
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="MetaInfoVBox" type="VBoxContainer" parent="CenterInfo/Panel/MarginContainer/MetaInfoHbox"]
 margin_right = 82.0
-margin_bottom = 160.0
+margin_bottom = 159.0
 
 [node name="TitleLabel" type="Label" parent="CenterInfo/Panel/MarginContainer/MetaInfoHbox/MetaInfoVBox"]
 margin_right = 82.0
 margin_bottom = 30.0
-custom_fonts/font = ExtResource( 3 )
+custom_fonts/font = ExtResource( 6 )
 text = "东一局"
 
 [node name="TimesLabel" type="Label" parent="CenterInfo/Panel/MarginContainer/MetaInfoHbox/MetaInfoVBox"]
@@ -107,14 +107,14 @@ text = "余牌: -1"
 
 [node name="DebugInfo" type="VBoxContainer" parent="CenterInfo/Panel/MarginContainer"]
 margin_right = 300.0
-margin_bottom = 160.0
+margin_bottom = 159.0
 alignment = 2
 
 [node name="Label" type="Label" parent="CenterInfo/Panel/MarginContainer/DebugInfo"]
-margin_top = 130.0
+margin_top = 129.0
 margin_right = 300.0
-margin_bottom = 160.0
-custom_fonts/font = ExtResource( 3 )
+margin_bottom = 159.0
+custom_fonts/font = ExtResource( 6 )
 text = "DEBUG 调试信息"
 
 [node name="SeatInfoContainer" type="MarginContainer" parent="CenterInfo/Panel"]
@@ -159,7 +159,7 @@ margin_right = 180.0
 margin_bottom = 44.0
 text = "南家: 25000"
 
-[node name="DoraTiles" parent="CenterInfo/Panel" instance=ExtResource( 1 )]
+[node name="DoraTiles" parent="CenterInfo/Panel" instance=ExtResource( 4 )]
 anchor_left = 0.34375
 anchor_top = 0.0833333
 anchor_right = 0.88375
@@ -168,7 +168,7 @@ margin_right = 43.2
 margin_bottom = 11.2
 rect_scale = Vector2( 0.8, 0.8 )
 
-[node name="PrevDiscard" parent="." instance=ExtResource( 13 )]
+[node name="PrevDiscard" parent="." instance=ExtResource( 3 )]
 anchor_left = 0.226563
 anchor_top = 0.277778
 anchor_right = 0.226563
@@ -179,14 +179,14 @@ margin_right = 500.0
 margin_bottom = -140.0
 rect_rotation = 90.0
 
-[node name="PrevMelds" parent="." instance=ExtResource( 14 )]
+[node name="PrevMelds" parent="." instance=ExtResource( 1 )]
 margin_left = 65.0
 margin_top = 20.0
 margin_right = 65.0
 margin_bottom = 8.99998
 rect_rotation = 90.0
 
-[node name="PrevtHand" parent="." instance=ExtResource( 4 )]
+[node name="PrevtHand" parent="." instance=ExtResource( 2 )]
 anchor_left = 0.015625
 anchor_right = 0.015625
 anchor_bottom = 0.944444
@@ -195,7 +195,7 @@ margin_right = 736.0
 margin_bottom = -624.0
 rect_rotation = 90.0
 
-[node name="FrontDiscard" parent="." instance=ExtResource( 13 )]
+[node name="FrontDiscard" parent="." instance=ExtResource( 3 )]
 anchor_left = 0.375
 anchor_top = 0.118056
 anchor_right = 0.375
@@ -206,14 +206,14 @@ margin_right = 640.0
 margin_bottom = 355.0
 rect_rotation = 180.0
 
-[node name="FrontMelds" parent="." instance=ExtResource( 14 )]
+[node name="FrontMelds" parent="." instance=ExtResource( 1 )]
 margin_left = 1180.0
 margin_top = 65.0
 margin_right = 1180.0
 margin_bottom = 54.0
 rect_rotation = 180.0
 
-[node name="FrontHand" parent="." instance=ExtResource( 4 )]
+[node name="FrontHand" parent="." instance=ExtResource( 2 )]
 anchor_left = 0.234375
 anchor_top = 0.0277777
 anchor_right = 0.234375
@@ -224,7 +224,7 @@ margin_right = 1360.0
 margin_bottom = 112.0
 rect_rotation = 180.0
 
-[node name="NextDiscard" parent="." instance=ExtResource( 13 )]
+[node name="NextDiscard" parent="." instance=ExtResource( 3 )]
 anchor_left = 0.632813
 anchor_top = 0.277778
 anchor_right = 0.773438
@@ -234,14 +234,14 @@ margin_right = 140.0
 margin_bottom = 500.0
 rect_rotation = -90.0
 
-[node name="NextMelds" parent="." instance=ExtResource( 14 )]
+[node name="NextMelds" parent="." instance=ExtResource( 1 )]
 margin_left = 1215.0
 margin_top = 700.0
 margin_right = 1215.0
 margin_bottom = 689.0
 rect_rotation = -90.0
 
-[node name="NextHand" parent="." instance=ExtResource( 4 )]
+[node name="NextHand" parent="." instance=ExtResource( 2 )]
 anchor_left = 0.940625
 anchor_top = 0.0555556
 anchor_right = 0.984375
@@ -251,19 +251,19 @@ margin_right = 624.0
 margin_bottom = 736.0
 rect_rotation = -90.0
 
-[node name="SelfDiscard" parent="." instance=ExtResource( 13 )]
+[node name="SelfDiscard" parent="." instance=ExtResource( 3 )]
 anchor_left = 0.375
 anchor_top = 0.638889
 anchor_right = 0.625
 anchor_bottom = 0.888889
 
-[node name="SelfMelds" parent="." instance=ExtResource( 14 )]
+[node name="SelfMelds" parent="." instance=ExtResource( 1 )]
 margin_left = 100.0
 margin_top = 655.0
 margin_right = 100.0
 margin_bottom = 644.0
 
-[node name="HandTiles" parent="." instance=ExtResource( 4 )]
+[node name="HandTiles" parent="." instance=ExtResource( 2 )]
 anchor_left = 0.234375
 anchor_top = 0.894444
 anchor_right = 0.765625
@@ -297,28 +297,28 @@ text = "立直"
 margin_left = 48.0
 margin_right = 84.0
 margin_bottom = 36.0
-custom_fonts/font = ExtResource( 3 )
+custom_fonts/font = ExtResource( 6 )
 text = "吃"
 
 [node name="Pong" type="Button" parent="CallTileButtons/HBoxContainer"]
 margin_left = 88.0
 margin_right = 124.0
 margin_bottom = 36.0
-custom_fonts/font = ExtResource( 3 )
+custom_fonts/font = ExtResource( 6 )
 text = "碰"
 
 [node name="Kong" type="Button" parent="CallTileButtons/HBoxContainer"]
 margin_left = 128.0
 margin_right = 164.0
 margin_bottom = 36.0
-custom_fonts/font = ExtResource( 3 )
+custom_fonts/font = ExtResource( 6 )
 text = "杠"
 
 [node name="Win" type="Button" parent="CallTileButtons/HBoxContainer"]
 margin_left = 168.0
 margin_right = 204.0
 margin_bottom = 36.0
-custom_fonts/font = ExtResource( 3 )
+custom_fonts/font = ExtResource( 6 )
 text = "和"
 
 [connection signal="pressed" from="CallTileButtons/HBoxContainer/Richi" to="." method="_on_Richi_pressed"]

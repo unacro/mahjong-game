@@ -1,18 +1,19 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://src/client/ui/ui_play_space.tscn" type="PackedScene" id=1]
-[ext_resource path="res://src/client/game/client_gateway.gd" type="Script" id=2]
-[ext_resource path="res://assets/default_theme.tres" type="Theme" id=3]
-[ext_resource path="res://src/client/game/temp_debug_info.gd" type="Script" id=4]
+[ext_resource path="res://src/client/local_game/board/play_space.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/client/local_game/debug/temp_debug_info.gd" type="Script" id=3]
+[ext_resource path="res://src/server/game_host.gd" type="Script" id=4]
+[ext_resource path="res://assets/default_theme.tres" type="Theme" id=5]
 
-[node name="ClientGateway" type="Node"]
-script = ExtResource( 2 )
+[node name="GameHost" type="Node"]
+script = ExtResource( 4 )
 
 [node name="PlaySpace" parent="." instance=ExtResource( 1 )]
+theme = ExtResource( 5 )
 
 [node name="DebugInfo" type="Control" parent="."]
-theme = ExtResource( 3 )
-script = ExtResource( 4 )
+theme = ExtResource( 5 )
+script = ExtResource( 3 )
 
 [node name="MD5" type="LinkButton" parent="DebugInfo"]
 margin_right = 12.0
@@ -37,7 +38,7 @@ text = "Debug (Esc)"
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( 3 )
+theme = ExtResource( 5 )
 
 [node name="Mask" type="ColorRect" parent="DebugConsole"]
 anchor_right = 1.0
@@ -87,7 +88,7 @@ __meta__ = {
 
 [node name="KongTimes" type="SpinBox" parent="DebugConsole/WindowDialog/MarginContainer/GridContainer"]
 margin_left = 112.0
-margin_right = 220.0
+margin_right = 224.0
 margin_bottom = 30.0
 size_flags_horizontal = 3
 max_value = 4.0
@@ -107,7 +108,7 @@ selected = 0
 [node name="Draw" type="Button" parent="DebugConsole/WindowDialog/MarginContainer/GridContainer"]
 margin_left = 112.0
 margin_top = 34.0
-margin_right = 220.0
+margin_right = 224.0
 margin_bottom = 60.0
 focus_mode = 0
 enabled_focus_mode = 0
@@ -122,7 +123,7 @@ text = "展示别家手牌"
 [node name="XRayButton" type="CheckButton" parent="DebugConsole/WindowDialog/MarginContainer/GridContainer"]
 margin_left = 112.0
 margin_top = 64.0
-margin_right = 220.0
+margin_right = 224.0
 margin_bottom = 104.0
 focus_mode = 0
 enabled_focus_mode = 0

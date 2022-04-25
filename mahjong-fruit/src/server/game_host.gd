@@ -58,7 +58,7 @@ func _ready():
 ################################################################
 func new_game() -> void:
 	game = MahjongGame.new()
-	_play_space.known_dora = game.get_dora(Mahjong.DORA.OUTER)
+	_play_space.known_dora = game.get_dora(MahjongBase.DORA.OUTER)
 	_player_class = game.get_player(player_index)
 	_play_space.player_points = [ 25000, 25000, 25000, 25000 ]
 	_play_space.hand_tiles = _player_class.hand
@@ -124,15 +124,15 @@ func _on_tile_discarded(tile_value) -> void:
 
 func _on_tile_called(data: Dictionary) -> void:
 	match data["type"]:
-		Mahjong.CALL.WIN:
+		MahjongBase.CALL.WIN:
 			print("玩家%d 选择 和牌" % player_index)
-		Mahjong.CALL.KONG:
+		MahjongBase.CALL.KONG:
 			print("玩家%d 选择 杠" % player_index)
-		Mahjong.CALL.PONG:
+		MahjongBase.CALL.PONG:
 			print("玩家%d 选择 碰" % player_index)
-		Mahjong.CALL.CHOW:
+		MahjongBase.CALL.CHOW:
 			print("玩家%d 选择 吃" % player_index)
-		Mahjong.CALL.RICHI:
+		MahjongBase.CALL.RICHI:
 			print("玩家%d 选择 立直" % player_index)
 
 
@@ -147,7 +147,7 @@ func _on_NewGame_pressed():
 
 func _on_KongTimes_value_changed(value):
 	game.kong_count = int(value)
-	_play_space.known_dora = game.get_dora(Mahjong.DORA.OUTER)
+	_play_space.known_dora = game.get_dora(MahjongBase.DORA.OUTER)
 	$DebugConsole/Deck.bbcode_text = game.temp_debug_deck()
 
 

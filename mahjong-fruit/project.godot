@@ -10,17 +10,17 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
-"class": "Mahjong",
+"class": "MahjongBase",
 "language": "GDScript",
-"path": "res://src/core/mahjong_engine.gd"
+"path": "res://src/core/mahjong_base.gd"
 }, {
 "base": "Node",
 "class": "MahjongGame",
 "language": "GDScript",
-"path": "res://src/server/mahjong_game.gd"
+"path": "res://src/core/mahjong_game.gd"
 } ]
 _global_script_class_icons={
-"Mahjong": "",
+"MahjongBase": "",
 "MahjongGame": ""
 }
 

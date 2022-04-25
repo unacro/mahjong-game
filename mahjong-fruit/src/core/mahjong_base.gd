@@ -1,4 +1,4 @@
-class_name Mahjong
+class_name MahjongBase
 extends Reference
 # 麻将基础类
 
@@ -36,7 +36,7 @@ enum HANDS {
 }
 # 流局: 九种九牌 四风连打 四家立直 四杠散了
 enum DRAWS { NINE_ORPHANS, QUADRA_WIND, QUADRA_RICHI, QUADRA_KONG }
-enum MAHJONG {
+enum TILE_VALUE {
 	MAN_1A = 110,
 	MAN_1B = 111,
 	MAN_1C = 112,
@@ -178,7 +178,7 @@ enum MAHJONG {
 ################################################################
 # Constants 常量
 ################################################################
-const MAHJONG_INDEX = {
+const TILE_INDEX = {
 	11: 0,
 	12: 1,
 	13: 2,
@@ -256,8 +256,8 @@ static func index_of(tile: int) -> int:
 	if tile % 100 == 53 and tile < 400:
 		# warning-ignore:integer_division
 		return int(tile / 100) + 34  # 赤宝牌
-	elif MAHJONG_INDEX.has(index):
-		return MAHJONG_INDEX[index]
+	elif TILE_INDEX.has(index):
+		return TILE_INDEX[index]
 	return 34
 
 
@@ -308,9 +308,9 @@ static func deserialize(deck_sequence: String) -> Array:
 	return deck
 
 
-static func new_deck(enable_sequence: bool = false):
+static func new_tile_walls(enable_sequence: bool = false):
 	var new_deck: Array = []
-	for tile in MAHJONG.values():
+	for tile in TILE_VALUE.values():
 		new_deck.append(tile)
 	new_deck.shuffle()
 	if enable_sequence:
@@ -319,56 +319,84 @@ static func new_deck(enable_sequence: bool = false):
 		return new_deck
 
 
-static func deal(sequence: String, player: int, count: int = 4) -> Array:
-	var deck: Array = deserialize(sequence)
-	var s: int = 3  # 每人基础三墩 4 * 3 = 12 张
-	if count <= 1:
+# sequence 根据牌序发放手牌
+# player_index 玩家序号非法则返回山牌序列
+# player_count 兼容两家 / 三家 / 五家及以上等非常规玩家数量
+# jump 允许庄家最后一张平跳
+# stack_times 允许每家 7 张而不是 13 张
+# stack_count 允许每次拿 1 墩而不是 2 墩
+static func deal_tiles(sequence: String,
+			player_index: int, player_count: int = 4,
+			jump: bool = true, stack_times: int = 3, stack_count: int = 2,
+			enable_debug: bool = false) -> Array:
+	if player_count < 2:
+		printerr("非法的玩家数量 %d" % player_count)
 		return []
-	# 兼容两家 / 三家 / 五家等非常规玩家数量
-	if player >= 0 and player < count:
+	var deck: Array = deserialize(sequence)
+	if enable_debug:
+		deck = []
+		for i in range(1, 137):
+			deck.append(i)
+	var jump_distance: int = 4 if jump else 2
+	if player_index >= 0 and player_index < player_count:
 		var hand: Array = []
-		for i in range(s):
+		for i in range(stack_times):
 			hand.append_array(deck.slice(
-					i * count * 4 + player * 4,
-					i * count * 4 + player * 4 + 3))
-		if player == 0:
-			hand.append(deck[count * s * 4 + player])
-			hand.append(deck[count * s * 4 + 4])  # 庄家跳牌固定为4 而不是count
-		elif player < 4:
-			hand.append(deck[count * s * 4 + player])
+					(i * player_count + player_index) * (stack_count * 2),
+					(i * player_count + player_index + 1) * (stack_count * 2) - 1))
+		if player_index == 0:
+			hand.append(deck[player_count * stack_times * stack_count * 2 + player_index])
+			hand.append(deck[player_count * stack_times * stack_count * 2 + jump_distance])
+		elif player_index < jump_distance:
+			hand.append(deck[player_count * stack_times * stack_count * 2 + player_index])
 		else:
-			hand.append(deck[count * s * 4 + player + 1])
-		hand.sort()
+			hand.append(deck[player_count * stack_times * stack_count * 2 + player_index + 1])
 		return hand  # 返回手牌
 	else:
-		var mountain: Array = []
+		var tile_walls: Array = []
 		# warning-ignore:narrowing_conversion
-		var t = deck.slice(count * s * 4 + max(count, 4) + 1, len(deck) - 15)
-		if count < 4:
-			mountain = deck.slice(count * s * 4 + count, count * s * 4 + 3)
-			mountain.append_array(t)
+		var temp = deck.slice(
+				player_count * stack_times * stack_count * 2 + max(player_count, jump_distance) + 1,
+				len(deck) - 15)  # 没有根据开杠数量计算海底牌 出去自行处理
+		if player_count < jump_distance:
+			tile_walls = deck.slice(
+					player_count * stack_times * stack_count * 2 + player_count,
+					player_count * stack_times * stack_count * 2 + jump_distance - 1)
+			tile_walls.append_array(temp)
 		else:
-			mountain = t
-		return mountain  # 返回山牌
+			tile_walls = temp
+		return tile_walls  # 返回山牌
 
 
-static func get_dora(sequence: String, dora_type: int) -> Array:
+# 严格来说这个算法是错误的(与现实相悖)
+# 比如牌山是 1 3 5 7
+#            2 4 6 8 这样排列的
+# 正向是 12345678 没问题, 但逆向应该是 78563412 才对
+# 这里与雀魂的算法对齐, 逆向视为 87654321
+static func get_dora(sequence: String, dora_type: int, kong_count: int = 0):
 	var deck: Array = deserialize(sequence)
 	var dora: Array = []
 	match dora_type:
-		DORA.OUTER:
+		DORA.OUTER:  # 宝牌指示器 杠宝牌指示器
 			dora = deck.slice(-13, -4, 2)
-		DORA.INNER:
+			dora.invert()
+			return dora.slice(0, kong_count)
+		DORA.INNER:  # 里宝牌指示器 杠里宝牌指示器
 			dora = deck.slice(-14, -5, 2)
-		DORA.RINSHAN:
+			dora.invert()
+			return dora.slice(0, kong_count)
+		DORA.RINSHAN:  # 岭上牌
 			dora = deck.slice(-4, -1)
-		DORA.SEAFLOOR:
+			dora.invert()
+			return dora[kong_count - 1]
+		DORA.SEAFLOOR:  # 海底牌
 			dora = deck.slice(-19, -15)
-	dora.invert()
-	return dora
+			dora.invert()
+			return dora[kong_count]
+	return null
 
 
-static func check_win(tiles) -> bool:
+static func can_win(tiles) -> bool:
 	var hand: Array = []
 	match typeof(tiles):
 		TYPE_ARRAY:
@@ -425,9 +453,61 @@ static func check_call(hand: Array, tile: int) -> Dictionary:
 		options[CALL.CHOW].append([mark.chow[2], mark.chow[3]])
 	if len(options[CALL.PONG]) == 0:
 		assert(options.erase(CALL.PONG))
-	if check_win(hand):
+	if can_win(hand):
 		options[CALL.WIN] = true
 	return options
+
+
+static func get_debug_info(sequence: String, kong_count: int = 0,
+			remain_count: int = 69, enable_tile_value: bool = false) -> Array:
+	var full_tiles_wall: Array = deal_tiles(sequence, -1)
+	var shan_pai: String = ""
+	for i in range(len(full_tiles_wall)):
+		var tile: String = ""
+		if enable_tile_value:
+			tile = "%d" % full_tiles_wall[i]
+		else:
+			tile = ord_at(full_tiles_wall[i])
+		if i > 63:
+			if i < 68 - kong_count:
+				shan_pai += "%s " % tile
+			elif i == 68 - kong_count:
+				shan_pai += "[color=#2196f3][u]%s[/u][/color] " % tile
+			else:
+				shan_pai += "[color=#82b1ff][s]%s[/s][/color] " % tile
+		elif i < len(full_tiles_wall) - remain_count:
+			shan_pai += "[color=#9e9e9e][s]%s[/s][/color] " % tile
+		elif i == len(full_tiles_wall) - remain_count:
+			shan_pai += "[color=#00bcd4][u]%s[/u][/color] " % tile
+		else:
+			shan_pai += "%s " % tile
+	var full_ace: Array = deserialize(sequence).slice(122, 136)
+	var wang_pai: String = ""
+	for i in range(len(full_ace)):
+		var tile: String = ""
+		if enable_tile_value:
+			tile = "%d" % full_ace[i]
+		else:
+			tile = ord_at(full_ace[i])
+		if i < 10:
+			if i % 2 == 0:
+				if i < 8 - kong_count * 2:
+					wang_pai += "[color=#ea80fc]%s[/color] " % tile
+				else:
+					wang_pai += "[color=#9c27b0][u]%s[/u][/color] " % tile
+			else:
+				if i < 8 - kong_count * 2:
+					wang_pai += "[color=#ffff8d]%s[/color] " % tile
+				else:
+					wang_pai += "[color=#ffeb3b][u]%s[/u][/color] " % tile
+		else:
+			if i < 13 - kong_count:
+				wang_pai += "[color=#4caf50]%s[/color] " % tile
+			elif i == 13 - kong_count:
+				wang_pai += "[color=#4caf50][u]%s[/u][/color] " % tile
+			else:
+				wang_pai += "[color=#b9f6ca][s]%s[/s][/color] " % tile
+	return [ shan_pai, wang_pai ]
 
 
 ################################################################
@@ -493,7 +573,7 @@ static func _map_tiles_to_count(tiles: Array,
 	for _i in range(34):
 		standard_map.append(0)
 	for tile in tiles:
-		standard_map[MAHJONG_INDEX[int(tile / 10)]] += 1
+		standard_map[TILE_INDEX[int(tile / 10)]] += 1
 	match map_method:
 		MAP_METHOD.LONG:
 			var long_map: Array = [0]

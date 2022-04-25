@@ -1,0 +1,501 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://assets/big_button_theme.tres" type="Theme" id=1]
+[ext_resource path="res://assets/fonts/yozai_font_24px.tres" type="DynamicFont" id=2]
+[ext_resource path="res://assets/fonts/yozai-medium.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://src/client/local_game/debug/debug_deal.gd" type="Script" id=4]
+[ext_resource path="res://src/client/local_game/debug/debug_algorithm.gd" type="Script" id=5]
+[ext_resource path="res://assets/default_theme.tres" type="Theme" id=6]
+[ext_resource path="res://src/client/local_game/debug/debug_win_check.gd" type="Script" id=7]
+
+[sub_resource type="DynamicFont" id=1]
+size = 48
+font_data = ExtResource( 3 )
+
+[node name="DebugAlgorithm" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 6 )
+script = ExtResource( 5 )
+
+[node name="Label" type="Label" parent="."]
+anchor_left = 0.425
+anchor_top = 0.0277778
+anchor_right = 0.575
+anchor_bottom = 0.134722
+custom_fonts/font = SubResource( 1 )
+text = "调试界面"
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="BackButton" type="Button" parent="."]
+anchor_left = 0.03125
+anchor_top = 0.0555556
+anchor_right = 0.078125
+anchor_bottom = 0.105556
+focus_mode = 0
+theme = ExtResource( 1 )
+enabled_focus_mode = 0
+text = "返回"
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="TabContainer" type="TabContainer" parent="."]
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+tab_align = 0
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Deal Hand" type="Control" parent="TabContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 38.0
+margin_right = -4.0
+margin_bottom = -4.0
+script = ExtResource( 4 )
+
+[node name="TilteLabel" type="Label" parent="TabContainer/Deal Hand"]
+anchor_left = 0.0295276
+anchor_top = 0.0561798
+anchor_right = 0.124016
+anchor_bottom = 0.11236
+margin_left = 9.99996
+margin_top = -15.0
+margin_right = 9.99995
+margin_bottom = -15.0
+custom_fonts/font = ExtResource( 2 )
+text = "模拟发牌"
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="MainPanel" type="ColorRect" parent="TabContainer/Deal Hand"]
+anchor_left = 0.0275591
+anchor_top = 0.11236
+anchor_right = 0.972441
+anchor_bottom = 0.955056
+color = Color( 0.25098, 0.243137, 0.282353, 1 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="HSplitContainer" type="HSplitContainer" parent="TabContainer/Deal Hand/MainPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+collapsed = true
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="ConsolePanel" type="Panel" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer"]
+margin_right = 180.0
+margin_bottom = 450.0
+rect_min_size = Vector2( 180, 0 )
+
+[node name="CenterContainer" type="CenterContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer"]
+margin_left = 10.0
+margin_top = 71.0
+margin_right = 170.0
+margin_bottom = 377.0
+theme = ExtResource( 6 )
+
+[node name="TileValueButton" type="CheckButton" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer"]
+margin_right = 160.0
+margin_bottom = 40.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "显示唯一值"
+
+[node name="UseIntButton" type="CheckButton" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer"]
+margin_top = 44.0
+margin_right = 160.0
+margin_bottom = 84.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "连续自然数"
+
+[node name="HSeparator2" type="HSeparator" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer"]
+margin_top = 88.0
+margin_right = 160.0
+margin_bottom = 92.0
+
+[node name="PlayerCount" type="SpinBox" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer"]
+margin_top = 96.0
+margin_right = 160.0
+margin_bottom = 126.0
+size_flags_horizontal = 3
+min_value = 2.0
+max_value = 8.0
+value = 4.0
+align = 1
+suffix = "个玩家"
+
+[node name="NotJumpButton" type="CheckButton" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer"]
+margin_top = 130.0
+margin_right = 160.0
+margin_bottom = 170.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "庄家平跳"
+
+[node name="DrawTimes" type="SpinBox" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer"]
+margin_top = 174.0
+margin_right = 160.0
+margin_bottom = 204.0
+size_flags_horizontal = 3
+min_value = 2.0
+max_value = 3.0
+value = 3.0
+align = 1
+prefix = "每人拿"
+suffix = "次"
+
+[node name="DrawCount" type="OptionButton" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer"]
+margin_top = 208.0
+margin_right = 160.0
+margin_bottom = 234.0
+focus_mode = 0
+size_flags_horizontal = 3
+enabled_focus_mode = 0
+text = "一次 2 墩 (4 张)"
+items = [ "一次 2 墩 (4 张)", null, false, 2, null, "一次 1 墩 (2 张)", null, false, 1, null ]
+selected = 0
+
+[node name="KongTimes" type="SpinBox" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer"]
+margin_top = 238.0
+margin_right = 160.0
+margin_bottom = 268.0
+size_flags_horizontal = 3
+max_value = 4.0
+align = 1
+prefix = "开杠"
+suffix = "次"
+
+[node name="HSeparator" type="HSeparator" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer"]
+margin_top = 272.0
+margin_right = 160.0
+margin_bottom = 276.0
+
+[node name="SimulateButton" type="Button" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer"]
+margin_top = 280.0
+margin_right = 160.0
+margin_bottom = 306.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "模拟牌山"
+
+[node name="VSplitContainer" type="VSplitContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer"]
+margin_left = 192.0
+margin_right = 960.0
+margin_bottom = 450.0
+rect_min_size = Vector2( 768, 0 )
+collapsed = true
+
+[node name="DeckPanel" type="Panel" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer"]
+margin_right = 768.0
+margin_bottom = 260.0
+rect_min_size = Vector2( 0, 260 )
+
+[node name="CenterContainer" type="CenterContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer"]
+margin_left = 24.0
+margin_top = 9.0
+margin_right = 744.0
+margin_bottom = 250.0
+rect_min_size = Vector2( 720, 0 )
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer"]
+margin_right = 720.0
+margin_bottom = 26.0
+
+[node name="Label" type="Label" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer2"]
+margin_top = 3.0
+margin_right = 64.0
+margin_bottom = 23.0
+text = "生成配牌"
+
+[node name="NewDeckButton" type="Button" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 68.0
+margin_right = 144.0
+margin_bottom = 26.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "随机洗乱"
+
+[node name="OrderDeckButton" type="Button" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 148.0
+margin_right = 224.0
+margin_bottom = 26.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "顺序排列"
+
+[node name="MD5Label" type="Label" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 228.0
+margin_top = 3.0
+margin_right = 720.0
+margin_bottom = 23.0
+size_flags_horizontal = 3
+text = "MD5"
+align = 2
+
+[node name="HSeparator" type="HSeparator" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer"]
+margin_top = 30.0
+margin_right = 720.0
+margin_bottom = 34.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer"]
+margin_top = 38.0
+margin_right = 720.0
+margin_bottom = 68.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer"]
+margin_top = 5.0
+margin_right = 64.0
+margin_bottom = 25.0
+text = "当前牌序"
+
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer"]
+margin_left = 68.0
+margin_right = 586.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+editable = false
+
+[node name="VerifyButton" type="Button" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer"]
+margin_left = 590.0
+margin_right = 720.0
+margin_bottom = 30.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "复制并验证 MD5"
+
+[node name="HSeparator2" type="HSeparator" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer"]
+margin_top = 72.0
+margin_right = 720.0
+margin_bottom = 76.0
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer"]
+margin_top = 80.0
+margin_right = 720.0
+margin_bottom = 185.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer3"]
+margin_right = 32.0
+margin_bottom = 105.0
+
+[node name="Label" type="Label" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer3/VBoxContainer"]
+margin_right = 32.0
+margin_bottom = 20.0
+text = "山牌"
+
+[node name="Label2" type="Label" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer3/VBoxContainer"]
+margin_top = 24.0
+margin_right = 32.0
+margin_bottom = 44.0
+text = "? 张"
+
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer3"]
+margin_left = 36.0
+margin_right = 40.0
+margin_bottom = 105.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer3"]
+margin_left = 44.0
+margin_right = 720.0
+margin_bottom = 105.0
+rect_min_size = Vector2( 0, 105 )
+size_flags_horizontal = 3
+bbcode_enabled = true
+
+[node name="HSeparator3" type="HSeparator" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer"]
+margin_top = 189.0
+margin_right = 720.0
+margin_bottom = 193.0
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer"]
+margin_top = 197.0
+margin_right = 720.0
+margin_bottom = 241.0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer4"]
+margin_right = 39.0
+margin_bottom = 44.0
+
+[node name="Label" type="Label" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer4/VBoxContainer2"]
+margin_right = 39.0
+margin_bottom = 20.0
+text = "王牌"
+
+[node name="Label2" type="Label" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer4/VBoxContainer2"]
+margin_top = 24.0
+margin_right = 39.0
+margin_bottom = 44.0
+text = "14 张"
+
+[node name="VSeparator2" type="VSeparator" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer4"]
+margin_left = 43.0
+margin_right = 47.0
+margin_bottom = 44.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer4"]
+margin_left = 51.0
+margin_right = 720.0
+margin_bottom = 44.0
+rect_min_size = Vector2( 0, 30 )
+size_flags_horizontal = 3
+bbcode_enabled = true
+
+[node name="PlayerPanel" type="Panel" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer"]
+margin_top = 272.0
+margin_right = 768.0
+margin_bottom = 450.0
+rect_min_size = Vector2( 0, 170 )
+
+[node name="CenterContainer" type="CenterContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/PlayerPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/PlayerPanel/CenterContainer"]
+margin_left = 24.0
+margin_top = 28.0
+margin_right = 744.0
+margin_bottom = 148.0
+rect_min_size = Vector2( 720, 120 )
+
+[node name="Label" type="Label" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/PlayerPanel/CenterContainer/VBoxContainer"]
+visible = false
+margin_right = 720.0
+margin_bottom = 20.0
+text = "玩家手牌"
+
+[node name="HSeparator" type="HSeparator" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/PlayerPanel/CenterContainer/VBoxContainer"]
+visible = false
+margin_right = 720.0
+margin_bottom = 4.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/PlayerPanel/CenterContainer/VBoxContainer"]
+margin_right = 720.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 0, 100 )
+size_flags_vertical = 3
+bbcode_enabled = true
+
+[node name="WindowDialog" type="WindowDialog" parent="TabContainer/Deal Hand"]
+anchor_left = 0.42126
+anchor_top = 0.41573
+anchor_right = 0.57874
+anchor_bottom = 0.58427
+rect_min_size = Vector2( 160, 90 )
+window_title = "模拟牌山"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Deal Hand/WindowDialog"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+bbcode_enabled = true
+bbcode_text = "TODO 模拟牌山
+TODO 平跳存在 bug"
+text = "TODO 模拟牌山"
+
+[node name="Win Check" type="Control" parent="TabContainer"]
+visible = false
+margin_left = 4.0
+margin_top = 38.0
+margin_right = 1020.0
+margin_bottom = 572.0
+script = ExtResource( 7 )
+
+[node name="TilteLabel" type="Label" parent="TabContainer/Win Check"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 40.0
+margin_top = 15.0
+margin_right = -880.0
+margin_bottom = -489.0
+custom_fonts/font = ExtResource( 2 )
+text = "和牌判断"
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="TabContainer/Win Check"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="TabContainer/Win Check/CenterContainer"]
+margin_left = 431.0
+margin_top = 252.0
+margin_right = 584.0
+margin_bottom = 282.0
+custom_fonts/font = ExtResource( 2 )
+text = "TODO 施工中"
+
+[node name="Hand Value" type="Control" parent="TabContainer"]
+visible = false
+margin_left = 4.0
+margin_top = 38.0
+margin_right = 1020.0
+margin_bottom = 572.0
+script = ExtResource( 7 )
+
+[node name="TilteLabel" type="Label" parent="TabContainer/Hand Value"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 40.0
+margin_top = 15.0
+margin_right = -880.0
+margin_bottom = -489.0
+custom_fonts/font = ExtResource( 2 )
+text = "点数计算"
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="TabContainer/Hand Value"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="TabContainer/Hand Value/CenterContainer"]
+margin_left = 431.0
+margin_top = 252.0
+margin_right = 584.0
+margin_bottom = 282.0
+custom_fonts/font = ExtResource( 2 )
+text = "TODO 施工中"
+
+[connection signal="pressed" from="BackButton" to="." method="_on_BackButton_pressed"]
+[connection signal="toggled" from="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer/TileValueButton" to="TabContainer/Deal Hand" method="_on_TileValueButton_toggled"]
+[connection signal="toggled" from="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer/UseIntButton" to="TabContainer/Deal Hand" method="_on_UseIntButton_toggled"]
+[connection signal="value_changed" from="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer/PlayerCount" to="TabContainer/Deal Hand" method="_on_PlayerCount_value_changed"]
+[connection signal="toggled" from="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer/NotJumpButton" to="TabContainer/Deal Hand" method="_on_NotJumpButton_toggled"]
+[connection signal="value_changed" from="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer/DrawTimes" to="TabContainer/Deal Hand" method="_on_DrawTimes_value_changed"]
+[connection signal="item_selected" from="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer/DrawCount" to="TabContainer/Deal Hand" method="_on_DrawCount_item_selected"]
+[connection signal="value_changed" from="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer/KongTimes" to="TabContainer/Deal Hand" method="_on_KongTimes_value_changed"]
+[connection signal="pressed" from="TabContainer/Deal Hand/MainPanel/HSplitContainer/ConsolePanel/CenterContainer/VBoxContainer/SimulateButton" to="TabContainer/Deal Hand" method="_on_SimulateButton_pressed"]
+[connection signal="pressed" from="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer2/NewDeckButton" to="TabContainer/Deal Hand" method="_on_NewDeckButton_pressed"]
+[connection signal="pressed" from="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer2/OrderDeckButton" to="TabContainer/Deal Hand" method="_on_OrderDeckButton_pressed"]
+[connection signal="pressed" from="TabContainer/Deal Hand/MainPanel/HSplitContainer/VSplitContainer/DeckPanel/CenterContainer/VBoxContainer/HBoxContainer/VerifyButton" to="TabContainer/Deal Hand" method="_on_VerifyButton_pressed"]

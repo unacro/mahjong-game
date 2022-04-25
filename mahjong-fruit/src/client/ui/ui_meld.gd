@@ -90,67 +90,67 @@ func _render_meld(meld_data: Dictionary) -> void:
 		if meld_data["pick"].empty():  # 暗杠
 			if meld_data["have"][0] > 400:
 				_render_tile()
-				_render_tile(Mahjong.index_of(meld_data["have"][0]))
-				_render_tile(Mahjong.index_of(meld_data["have"][0]))
+				_render_tile(MahjongBase.index_of(meld_data["have"][0]))
+				_render_tile(MahjongBase.index_of(meld_data["have"][0]))
 				_render_tile()
 			else:
-				_render_tile(Mahjong.index_of(meld_data["have"][0]))
+				_render_tile(MahjongBase.index_of(meld_data["have"][0]))
 				_render_tile()
 				_render_tile()
-				_render_tile(Mahjong.index_of(meld_data["have"][0]))
+				_render_tile(MahjongBase.index_of(meld_data["have"][0]))
 			pass
 		elif len(meld_data["pick"]) == 2:  # 加杠
 			match meld_data["mark"]:
 				2:
-					_render_tile(Mahjong.index_of(meld_data["have"][0]))
-					_render_tile(Mahjong.index_of(meld_data["pick"][0]), true)
-					_render_tile(Mahjong.index_of(meld_data["pick"][1]), true, true)
-					_render_tile(Mahjong.index_of(meld_data["have"][1]))
+					_render_tile(MahjongBase.index_of(meld_data["have"][0]))
+					_render_tile(MahjongBase.index_of(meld_data["pick"][0]), true)
+					_render_tile(MahjongBase.index_of(meld_data["pick"][1]), true, true)
+					_render_tile(MahjongBase.index_of(meld_data["have"][1]))
 				3:
-					_render_tile(Mahjong.index_of(meld_data["have"][0]))
-					_render_tile(Mahjong.index_of(meld_data["have"][1]))
-					_render_tile(Mahjong.index_of(meld_data["pick"][0]), true)
-					_render_tile(Mahjong.index_of(meld_data["pick"][1]), true, true)
+					_render_tile(MahjongBase.index_of(meld_data["have"][0]))
+					_render_tile(MahjongBase.index_of(meld_data["have"][1]))
+					_render_tile(MahjongBase.index_of(meld_data["pick"][0]), true)
+					_render_tile(MahjongBase.index_of(meld_data["pick"][1]), true, true)
 				_:
-					_render_tile(Mahjong.index_of(meld_data["pick"][0]), true)
-					_render_tile(Mahjong.index_of(meld_data["pick"][1]), true, true)
-					_render_tile(Mahjong.index_of(meld_data["have"][0]))
-					_render_tile(Mahjong.index_of(meld_data["have"][1]))
+					_render_tile(MahjongBase.index_of(meld_data["pick"][0]), true)
+					_render_tile(MahjongBase.index_of(meld_data["pick"][1]), true, true)
+					_render_tile(MahjongBase.index_of(meld_data["have"][0]))
+					_render_tile(MahjongBase.index_of(meld_data["have"][1]))
 		elif len(meld_data["have"]) == 3:  # 大明杠
 			match meld_data["mark"]:
 				2:
-					_render_tile(Mahjong.index_of(meld_data["have"][0]))
-					_render_tile(Mahjong.index_of(meld_data["pick"][0]), true)
-					_render_tile(Mahjong.index_of(meld_data["have"][1]))
-					_render_tile(Mahjong.index_of(meld_data["have"][2]))
+					_render_tile(MahjongBase.index_of(meld_data["have"][0]))
+					_render_tile(MahjongBase.index_of(meld_data["pick"][0]), true)
+					_render_tile(MahjongBase.index_of(meld_data["have"][1]))
+					_render_tile(MahjongBase.index_of(meld_data["have"][2]))
 				3:
-					_render_tile(Mahjong.index_of(meld_data["have"][0]))
-					_render_tile(Mahjong.index_of(meld_data["have"][1]))
-					_render_tile(Mahjong.index_of(meld_data["have"][2]))
-					_render_tile(Mahjong.index_of(meld_data["pick"][0]), true)
+					_render_tile(MahjongBase.index_of(meld_data["have"][0]))
+					_render_tile(MahjongBase.index_of(meld_data["have"][1]))
+					_render_tile(MahjongBase.index_of(meld_data["have"][2]))
+					_render_tile(MahjongBase.index_of(meld_data["pick"][0]), true)
 				_:
-					_render_tile(Mahjong.index_of(meld_data["pick"][0]), true)
-					_render_tile(Mahjong.index_of(meld_data["have"][0]))
-					_render_tile(Mahjong.index_of(meld_data["have"][1]))
-					_render_tile(Mahjong.index_of(meld_data["have"][2]))
+					_render_tile(MahjongBase.index_of(meld_data["pick"][0]), true)
+					_render_tile(MahjongBase.index_of(meld_data["have"][0]))
+					_render_tile(MahjongBase.index_of(meld_data["have"][1]))
+					_render_tile(MahjongBase.index_of(meld_data["have"][2]))
 		elif int(meld_data["have"][0] / 10) == int(meld_data["pick"][0] / 10):  # 碰
 			match meld_data["mark"]:
 				2:
-					_render_tile(Mahjong.index_of(meld_data["have"][0]))
-					_render_tile(Mahjong.index_of(meld_data["pick"][0]), true)
-					_render_tile(Mahjong.index_of(meld_data["have"][1]))
+					_render_tile(MahjongBase.index_of(meld_data["have"][0]))
+					_render_tile(MahjongBase.index_of(meld_data["pick"][0]), true)
+					_render_tile(MahjongBase.index_of(meld_data["have"][1]))
 				3:
-					_render_tile(Mahjong.index_of(meld_data["have"][0]))
-					_render_tile(Mahjong.index_of(meld_data["have"][1]))
-					_render_tile(Mahjong.index_of(meld_data["pick"][0]), true)
+					_render_tile(MahjongBase.index_of(meld_data["have"][0]))
+					_render_tile(MahjongBase.index_of(meld_data["have"][1]))
+					_render_tile(MahjongBase.index_of(meld_data["pick"][0]), true)
 				_:
-					_render_tile(Mahjong.index_of(meld_data["pick"][0]), true)
-					_render_tile(Mahjong.index_of(meld_data["have"][0]))
-					_render_tile(Mahjong.index_of(meld_data["have"][1]))
+					_render_tile(MahjongBase.index_of(meld_data["pick"][0]), true)
+					_render_tile(MahjongBase.index_of(meld_data["have"][0]))
+					_render_tile(MahjongBase.index_of(meld_data["have"][1]))
 		else:  # 吃
-			_render_tile(Mahjong.index_of(meld_data["pick"][0]), true)
+			_render_tile(MahjongBase.index_of(meld_data["pick"][0]), true)
 			for tile in meld_data["have"]:
-				_render_tile(Mahjong.index_of(tile))
+				_render_tile(MahjongBase.index_of(tile))
 		_render_cursor += meld_gap
 
 

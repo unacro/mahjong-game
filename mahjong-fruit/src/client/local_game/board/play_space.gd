@@ -165,20 +165,20 @@ func set_melds_info(melds: Array) -> void:
 
 
 func set_the_tile(tile: int) -> void:
-	var options: Dictionary = Mahjong.check_call(hand_tiles, tile)
+	var options: Dictionary = MahjongBase.check_call(hand_tiles, tile)
 	if len(options) == 0:
 		return
 	print("[DEBUG]", options)
-	if options.has(Mahjong.CALL.RICHI):
-		_call_tile_buttons[Mahjong.CALL.RICHI].visible = true
-	if options.has(Mahjong.CALL.CHOW):
-		_call_tile_buttons[Mahjong.CALL.CHOW].visible = true
-	if options.has(Mahjong.CALL.PONG):
-		_call_tile_buttons[Mahjong.CALL.PONG].visible = true
-	if options.has(Mahjong.CALL.KONG):
-		_call_tile_buttons[Mahjong.CALL.KONG].visible = true
-	if options.has(Mahjong.CALL.WIN):
-		_call_tile_buttons[Mahjong.CALL.WIN].visible = true
+	if options.has(MahjongBase.CALL.RICHI):
+		_call_tile_buttons[MahjongBase.CALL.RICHI].visible = true
+	if options.has(MahjongBase.CALL.CHOW):
+		_call_tile_buttons[MahjongBase.CALL.CHOW].visible = true
+	if options.has(MahjongBase.CALL.PONG):
+		_call_tile_buttons[MahjongBase.CALL.PONG].visible = true
+	if options.has(MahjongBase.CALL.KONG):
+		_call_tile_buttons[MahjongBase.CALL.KONG].visible = true
+	if options.has(MahjongBase.CALL.WIN):
+		_call_tile_buttons[MahjongBase.CALL.WIN].visible = true
 
 
 ################################################################
@@ -194,12 +194,12 @@ func _on_tile_clicked(discarded_tile: int) -> void:
 
 func _on_Richi_pressed():
 	_se_player["richi"].play()
-	emit_signal("tile_called", { "type": Mahjong.CALL.RICHI, "data": [] })
+	emit_signal("tile_called", { "type": MahjongBase.CALL.RICHI, "data": [] })
 
 
 func _on_Chow_pressed() -> void:
 	var data: Dictionary = {
-		"type": Mahjong.CALL.CHOW,
+		"type": MahjongBase.CALL.CHOW,
 		"data": [],
 	}
 	_se_player["chow"].play()
@@ -208,12 +208,12 @@ func _on_Chow_pressed() -> void:
 
 func _on_Pong_pressed() -> void:
 	_se_player["pong"].play()
-	emit_signal("tile_called", {"type": Mahjong.CALL.PONG})
+	emit_signal("tile_called", {"type": MahjongBase.CALL.PONG})
 
 
 func _on_Kong_pressed() -> void:
 	_se_player["kong"].play()
-	emit_signal("tile_called", {"type": Mahjong.CALL.KONG})
+	emit_signal("tile_called", {"type": MahjongBase.CALL.KONG})
 
 
 func _on_Win_pressed() -> void:
@@ -221,4 +221,4 @@ func _on_Win_pressed() -> void:
 		_se_player["win"].play()
 	else:
 		_se_player["tsumo"].play()
-	emit_signal("tile_called", {"type": Mahjong.CALL.WIN})
+	emit_signal("tile_called", {"type": MahjongBase.CALL.WIN})

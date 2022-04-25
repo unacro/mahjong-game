@@ -71,7 +71,7 @@ func _ready():
 func set_dora(tiles: Array) -> void:
 	dora = tiles
 	for i in range(len(tiles)):
-		_dora_tiles[i].tile_index = Mahjong.index_of(tiles[i])
+		_dora_tiles[i].tile_index = MahjongBase.index_of(tiles[i])
 	for i in range(len(tiles), 5):
 		_dora_tiles[i].tile_index = 34
 

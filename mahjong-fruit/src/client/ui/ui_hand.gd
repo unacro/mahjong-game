@@ -90,7 +90,7 @@ func _deferred_set_hand_tiles(tiles: Array) -> void:
 		hand_count[1] = false
 	for i in range(hand_count[0]):  # 渲染持有的手牌
 		if visible_tiles:
-			_hand_tile_nodes[i].tile_index = Mahjong.index_of(tiles[i])
+			_hand_tile_nodes[i].tile_index = MahjongBase.index_of(tiles[i])
 		else:
 			_hand_tile_nodes[i].tile_index = 34
 		_hand_tile_nodes[i].visible = true
@@ -98,7 +98,7 @@ func _deferred_set_hand_tiles(tiles: Array) -> void:
 		_hand_tile_nodes[i].visible = false  # 隐藏多余的手牌栏位
 	if hand_count[1]:  # 渲染摸到的牌
 		if visible_tiles:
-			_hand_tile_nodes[13].tile_index = Mahjong.index_of(tiles[hand_count[0]])
+			_hand_tile_nodes[13].tile_index = MahjongBase.index_of(tiles[hand_count[0]])
 		else:
 			_hand_tile_nodes[13].tile_index = 34
 		_hand_tile_nodes[13].visible = true
