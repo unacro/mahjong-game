@@ -14,13 +14,19 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/core/mahjong_base.gd"
 }, {
-"base": "Node",
+"base": "MahjongBase",
+"class": "MahjongFaker",
+"language": "GDScript",
+"path": "res://src/core/mahjong_faker.gd"
+}, {
+"base": "MahjongBase",
 "class": "MahjongGame",
 "language": "GDScript",
 "path": "res://src/core/mahjong_game.gd"
 } ]
 _global_script_class_icons={
 "MahjongBase": "",
+"MahjongFaker": "",
 "MahjongGame": ""
 }
 

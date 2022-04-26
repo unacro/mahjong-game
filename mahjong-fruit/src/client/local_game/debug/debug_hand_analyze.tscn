@@ -1,0 +1,302 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://src/client/ui/ui_hand.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/default_theme.tres" type="Theme" id=2]
+[ext_resource path="res://assets/fonts/yozai_font_24px.tres" type="DynamicFont" id=3]
+[ext_resource path="res://assets/images/overlap/stamp_ron.png" type="Texture" id=4]
+[ext_resource path="res://assets/images/overlap/stamp_no.png" type="Texture" id=5]
+[ext_resource path="res://src/client/local_game/debug/debug_hand_analyze.gd" type="Script" id=6]
+[ext_resource path="res://src/client/ui/ui_dora.tscn" type="PackedScene" id=7]
+
+[node name="Hand Analyze" type="Control"]
+margin_left = 4.0
+margin_top = 38.0
+margin_right = 1020.0
+margin_bottom = 572.0
+theme = ExtResource( 2 )
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="TilteLabel" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 40.0
+margin_top = 15.0
+margin_right = -880.0
+margin_bottom = -489.0
+custom_fonts/font = ExtResource( 3 )
+text = "手牌分析"
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="VSplitContainer" type="VSplitContainer" parent="."]
+anchor_left = 0.0275591
+anchor_top = 0.11236
+anchor_right = 0.972441
+anchor_bottom = 0.955056
+collapsed = true
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="TopPanel" type="Panel" parent="VSplitContainer"]
+margin_right = 960.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 0, 200 )
+
+[node name="ColorRect" type="ColorRect" parent="VSplitContainer/TopPanel"]
+anchor_left = 0.0104167
+anchor_top = 0.05
+anchor_right = 0.989583
+anchor_bottom = 0.95
+margin_left = -3.14713e-05
+margin_top = 90.0
+margin_right = 0.000305176
+color = Color( 0.258824, 0.258824, 0.258824, 1 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VSplitContainer/TopPanel"]
+anchor_left = 0.0104167
+anchor_top = 0.05
+anchor_right = 0.989583
+anchor_bottom = 0.95
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VSplitContainer/TopPanel/VBoxContainer"]
+margin_right = 939.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true
+}
+
+[node name="Label" type="Label" parent="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer"]
+margin_top = 10.0
+margin_right = 32.0
+margin_bottom = 30.0
+text = "手牌"
+
+[node name="LineEdit" type="LineEdit" parent="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer"]
+margin_left = 36.0
+margin_top = 5.0
+margin_right = 536.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 500, 0 )
+size_flags_vertical = 4
+text = "7z7z .m555-0_1 .p550-5_2 .s055-5_3 .z555-5_1"
+clear_button_enabled = true
+placeholder_text = "示例: 1m9m1p9p1s9s1z2z3z4z5z6z7z = 7z (国士无双十三面)"
+placeholder_alpha = 0.3
+
+[node name="ConfirmButton" type="Button" parent="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer"]
+margin_left = 540.0
+margin_top = 7.0
+margin_right = 584.0
+margin_bottom = 33.0
+focus_mode = 0
+size_flags_vertical = 4
+enabled_focus_mode = 0
+text = "确定"
+
+[node name="RandomButton" type="Button" parent="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer"]
+margin_left = 588.0
+margin_top = 7.0
+margin_right = 664.0
+margin_bottom = 33.0
+focus_mode = 0
+size_flags_vertical = 4
+enabled_focus_mode = 0
+text = "随机生成"
+
+[node name="RandomMeldsCount" type="CheckButton" parent="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer"]
+margin_left = 668.0
+margin_right = 812.0
+margin_bottom = 40.0
+focus_mode = 0
+size_flags_vertical = 4
+pressed = true
+enabled_focus_mode = 0
+text = "随机副露"
+
+[node name="MeldCount" type="SpinBox" parent="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer"]
+margin_left = 816.0
+margin_top = 5.0
+margin_right = 939.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 4.0
+prefix = "指定"
+suffix = "副露"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VSplitContainer/TopPanel/VBoxContainer"]
+margin_top = 44.0
+margin_right = 939.0
+margin_bottom = 84.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true
+}
+
+[node name="Label" type="Label" parent="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer2"]
+margin_top = 10.0
+margin_right = 32.0
+margin_bottom = 30.0
+text = "宝牌"
+
+[node name="LineEdit" type="LineEdit" parent="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer2"]
+margin_left = 36.0
+margin_top = 5.0
+margin_right = 176.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 140, 0 )
+size_flags_vertical = 4
+max_length = 10
+clear_button_enabled = true
+placeholder_text = "格式同上"
+placeholder_alpha = 0.3
+
+[node name="Gap" type="MarginContainer" parent="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer2"]
+margin_left = 180.0
+margin_right = 380.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 200, 0 )
+
+[node name="TsumoButton" type="CheckButton" parent="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer2"]
+margin_left = 384.0
+margin_right = 496.0
+margin_bottom = 40.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "自摸"
+
+[node name="BankerButton" type="CheckButton" parent="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer2"]
+margin_left = 500.0
+margin_right = 612.0
+margin_bottom = 40.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "坐庄"
+
+[node name="DoraTiles" parent="VSplitContainer/TopPanel" instance=ExtResource( 7 )]
+anchor_left = 0.208333
+anchor_top = 0.29
+anchor_right = 0.320833
+anchor_bottom = 0.43
+margin_right = 108.0
+margin_bottom = 28.0
+rect_scale = Vector2( 0.5, 0.5 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
+scale_multiple = 0.6
+
+[node name="HandTiles" parent="VSplitContainer/TopPanel" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 10.0
+margin_top = 128.0
+margin_right = 949.0
+margin_bottom = 184.0
+visible_tiles = true
+
+[node name="RonStamp" type="TextureRect" parent="VSplitContainer/TopPanel"]
+visible = false
+anchor_left = 0.78125
+anchor_top = 0.6
+anchor_right = 0.923544
+anchor_bottom = 0.783013
+margin_top = -7.62939e-06
+margin_right = -56.6025
+margin_bottom = 43.3975
+rect_rotation = -30.0
+rect_scale = Vector2( 1.25, 1.25 )
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="NotRonStamp" type="TextureRect" parent="VSplitContainer/TopPanel"]
+visible = false
+anchor_left = 0.78125
+anchor_top = 0.592284
+anchor_right = 0.924659
+anchor_bottom = 0.592284
+margin_top = 1.54329
+margin_right = -57.673
+margin_bottom = 46.5433
+rect_rotation = -30.0
+rect_scale = Vector2( 1.5, 1.5 )
+texture = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="ErrorInfo" type="RichTextLabel" parent="VSplitContainer/TopPanel"]
+anchor_left = 0.1875
+anchor_top = 0.525
+anchor_right = 0.8125
+anchor_bottom = 0.845
+margin_top = 7.62939e-06
+rect_min_size = Vector2( 600, 64 )
+bbcode_enabled = true
+fit_content_height = true
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="BottomPanel" type="Panel" parent="VSplitContainer"]
+margin_top = 212.0
+margin_right = 960.0
+margin_bottom = 450.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VSplitContainer/BottomPanel"]
+anchor_left = 0.0104167
+anchor_top = 0.0420169
+anchor_right = 0.989583
+anchor_bottom = 0.957985
+bbcode_enabled = true
+bbcode_text = "最极端的情况：全是大明杠的四杠子 有930px长 如果是下家/上家 妥妥的超出屏幕(设计分辨率是1280×720)
+如何兼容？1. 拆分副露错位显示  2. 等比例缩放 反正也没有交互(左右两边铁是上下家)
+没和
+- TODO 向听数
+- TODO 何切推荐
+和了
+- TODO 符数 详情
+- TODO 翻数 详情
+- TODO 役种
+- TODO 最终点数"
+text = "最极端的情况：全是大明杠的四杠子 有930px长 如果是下家/上家 妥妥的超出屏幕(设计分辨率是1280×720)
+如何兼容？1. 拆分副露错位显示  2. 等比例缩放 反正也没有交互(左右两边铁是上下家)
+没和
+- TODO 向听数
+- TODO 何切推荐
+和了
+- TODO 符数 详情
+- TODO 翻数 详情
+- TODO 役种
+- TODO 最终点数"
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[connection signal="text_entered" from="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer/LineEdit" to="." method="_on_LineEdit_text_entered"]
+[connection signal="pressed" from="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer/ConfirmButton" to="." method="_on_ConfirmButton_pressed"]
+[connection signal="pressed" from="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer/RandomButton" to="." method="_on_RandomButton_pressed"]
+[connection signal="toggled" from="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer/RandomMeldsCount" to="." method="_on_RandomMeldsCount_toggled"]
+[connection signal="value_changed" from="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer/MeldCount" to="." method="_on_MeldCount_value_changed"]
+[connection signal="text_changed" from="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer2/LineEdit" to="." method="_on_LineEdit_text_changed"]
+[connection signal="toggled" from="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer2/TsumoButton" to="." method="_on_TsumoButton_toggled"]
+[connection signal="toggled" from="VSplitContainer/TopPanel/VBoxContainer/HBoxContainer2/BankerButton" to="." method="_on_BankerButton_toggled"]

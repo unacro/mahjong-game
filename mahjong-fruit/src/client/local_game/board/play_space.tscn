@@ -1,6 +1,5 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=14 format=2]
 
-[ext_resource path="res://src/client/ui/ui_meld.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/client/ui/ui_hand.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/client/ui/ui_output.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/client/ui/ui_dora.tscn" type="PackedScene" id=4]
@@ -179,20 +178,13 @@ margin_right = 500.0
 margin_bottom = -140.0
 rect_rotation = 90.0
 
-[node name="PrevMelds" parent="." instance=ExtResource( 1 )]
-margin_left = 65.0
-margin_top = 20.0
-margin_right = 65.0
-margin_bottom = 8.99998
-rect_rotation = 90.0
-
 [node name="PrevtHand" parent="." instance=ExtResource( 2 )]
 anchor_left = 0.015625
 anchor_right = 0.015625
-anchor_bottom = 0.944444
+anchor_bottom = 1.0
 margin_left = 56.0
-margin_right = 736.0
-margin_bottom = -624.0
+margin_right = 776.0
+margin_bottom = -664.0
 rect_rotation = 90.0
 
 [node name="FrontDiscard" parent="." instance=ExtResource( 3 )]
@@ -206,21 +198,14 @@ margin_right = 640.0
 margin_bottom = 355.0
 rect_rotation = 180.0
 
-[node name="FrontMelds" parent="." instance=ExtResource( 1 )]
-margin_left = 1180.0
-margin_top = 65.0
-margin_right = 1180.0
-margin_bottom = 54.0
-rect_rotation = 180.0
-
 [node name="FrontHand" parent="." instance=ExtResource( 2 )]
 anchor_left = 0.234375
 anchor_top = 0.0277777
 anchor_right = 0.234375
 anchor_bottom = 0.0277777
-margin_left = 680.0
+margin_left = 980.0
 margin_top = 56.0001
-margin_right = 1360.0
+margin_right = 2260.0
 margin_bottom = 112.0
 rect_rotation = 180.0
 
@@ -234,20 +219,13 @@ margin_right = 140.0
 margin_bottom = 500.0
 rect_rotation = -90.0
 
-[node name="NextMelds" parent="." instance=ExtResource( 1 )]
-margin_left = 1215.0
-margin_top = 700.0
-margin_right = 1215.0
-margin_bottom = 689.0
-rect_rotation = -90.0
-
 [node name="NextHand" parent="." instance=ExtResource( 2 )]
 anchor_left = 0.940625
 anchor_top = 0.0555556
 anchor_right = 0.984375
 anchor_bottom = 0.0555556
 margin_top = 680.0
-margin_right = 624.0
+margin_right = 664.0
 margin_bottom = 736.0
 rect_rotation = -90.0
 
@@ -257,17 +235,15 @@ anchor_top = 0.638889
 anchor_right = 0.625
 anchor_bottom = 0.888889
 
-[node name="SelfMelds" parent="." instance=ExtResource( 1 )]
-margin_left = 100.0
-margin_top = 655.0
-margin_right = 100.0
-margin_bottom = 644.0
-
 [node name="HandTiles" parent="." instance=ExtResource( 2 )]
 anchor_left = 0.234375
 anchor_top = 0.894444
 anchor_right = 0.765625
 anchor_bottom = 0.972222
+margin_left = -300.0
+margin_top = 0.000305176
+margin_right = 300.0
+margin_bottom = 0.000183105
 active = true
 visible_tiles = true
 
@@ -283,40 +259,40 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CallTileButtons"]
-margin_left = 18.0
+margin_left = 10.0
 margin_top = 7.0
-margin_right = 222.0
+margin_right = 230.0
 margin_bottom = 43.0
 
 [node name="Richi" type="Button" parent="CallTileButtons/HBoxContainer"]
-margin_right = 44.0
+margin_right = 60.0
 margin_bottom = 36.0
 text = "立直"
 
 [node name="Chow" type="Button" parent="CallTileButtons/HBoxContainer"]
-margin_left = 48.0
-margin_right = 84.0
+margin_left = 64.0
+margin_right = 100.0
 margin_bottom = 36.0
 custom_fonts/font = ExtResource( 6 )
 text = "吃"
 
 [node name="Pong" type="Button" parent="CallTileButtons/HBoxContainer"]
-margin_left = 88.0
-margin_right = 124.0
+margin_left = 104.0
+margin_right = 140.0
 margin_bottom = 36.0
 custom_fonts/font = ExtResource( 6 )
 text = "碰"
 
 [node name="Kong" type="Button" parent="CallTileButtons/HBoxContainer"]
-margin_left = 128.0
-margin_right = 164.0
+margin_left = 144.0
+margin_right = 180.0
 margin_bottom = 36.0
 custom_fonts/font = ExtResource( 6 )
 text = "杠"
 
 [node name="Win" type="Button" parent="CallTileButtons/HBoxContainer"]
-margin_left = 168.0
-margin_right = 204.0
+margin_left = 184.0
+margin_right = 220.0
 margin_bottom = 36.0
 custom_fonts/font = ExtResource( 6 )
 text = "和"

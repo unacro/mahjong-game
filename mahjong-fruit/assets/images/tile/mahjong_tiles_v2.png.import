@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/mahjong_tiles_v2.png-c0628da860afbb2cc7e7769cf8b7865d.stex"
+path="res://.import/mahjong_tiles_v2.png-132252041abd6ec547a4720e54f003db.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/mahjong_tiles_v2.png"
-dest_files=[ "res://.import/mahjong_tiles_v2.png-c0628da860afbb2cc7e7769cf8b7865d.stex" ]
+source_file="res://assets/images/tile/mahjong_tiles_v2.png"
+dest_files=[ "res://.import/mahjong_tiles_v2.png-132252041abd6ec547a4720e54f003db.stex" ]
 
 [params]
 

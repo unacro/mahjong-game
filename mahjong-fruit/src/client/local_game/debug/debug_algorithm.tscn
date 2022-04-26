@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://assets/big_button_theme.tres" type="Theme" id=1]
 [ext_resource path="res://assets/fonts/yozai_font_24px.tres" type="DynamicFont" id=2]
@@ -6,7 +6,8 @@
 [ext_resource path="res://src/client/local_game/debug/debug_deal.gd" type="Script" id=4]
 [ext_resource path="res://src/client/local_game/debug/debug_algorithm.gd" type="Script" id=5]
 [ext_resource path="res://assets/default_theme.tres" type="Theme" id=6]
-[ext_resource path="res://src/client/local_game/debug/debug_win_check.gd" type="Script" id=7]
+[ext_resource path="res://src/client/local_game/debug/debug_hand_analyze.gd" type="Script" id=7]
+[ext_resource path="res://src/client/local_game/debug/debug_hand_analyze.tscn" type="PackedScene" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 48
@@ -417,41 +418,11 @@ anchor_bottom = 1.0
 bbcode_enabled = true
 bbcode_text = "TODO 模拟牌山
 TODO 平跳存在 bug"
-text = "TODO 模拟牌山"
+text = "TODO 模拟牌山
+TODO 平跳存在 bug"
 
-[node name="Win Check" type="Control" parent="TabContainer"]
+[node name="Hand Analyze" parent="TabContainer" instance=ExtResource( 8 )]
 visible = false
-margin_left = 4.0
-margin_top = 38.0
-margin_right = 1020.0
-margin_bottom = 572.0
-script = ExtResource( 7 )
-
-[node name="TilteLabel" type="Label" parent="TabContainer/Win Check"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 40.0
-margin_top = 15.0
-margin_right = -880.0
-margin_bottom = -489.0
-custom_fonts/font = ExtResource( 2 )
-text = "和牌判断"
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": true
-}
-
-[node name="CenterContainer" type="CenterContainer" parent="TabContainer/Win Check"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="Label" type="Label" parent="TabContainer/Win Check/CenterContainer"]
-margin_left = 431.0
-margin_top = 252.0
-margin_right = 584.0
-margin_bottom = 282.0
-custom_fonts/font = ExtResource( 2 )
-text = "TODO 施工中"
 
 [node name="Hand Value" type="Control" parent="TabContainer"]
 visible = false

@@ -16,5 +16,6 @@ Godot 实现日麻游戏
 
 ## 鸣谢
 
+- 字体资源来自「[悠哉字体 - 使用 SIL OFL 协议开源](https://github.com/lxgw/yozai-font)」
 - 图片资源来自「[麻雀の画像・素材 - 来夢来人](https://www.civillink.net/fsozai/majan.html)」
 - 音效资源来自「[天鳳用オリジナル SE: アンコロキング blog](http://ancoro.way-nifty.com/blog/se.html)」

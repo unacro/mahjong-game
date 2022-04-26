@@ -58,7 +58,7 @@ func _ready():
 ################################################################
 func new_game() -> void:
 	game = MahjongGame.new()
-	_play_space.known_dora = game.get_dora(MahjongBase.DORA.OUTER)
+	_play_space.known_dora = game.get_the_dora(MahjongBase.DORA.OUTER)
 	_player_class = game.get_player(player_index)
 	_play_space.player_points = [ 25000, 25000, 25000, 25000 ]
 	_play_space.hand_tiles = _player_class.hand
@@ -82,27 +82,11 @@ func _render_others_hand() -> void:
 
 
 func _render_discard_histroy() -> void:
-	var history: Array = game.get_discard_history()
-	var temp: Array = []
-	for i in range(len(history)):
-		if i == player_index:
-			break
-		else:
-			temp.append(history.pop_front())
-	history.append_array(temp)
-	_play_space.discard_history = history
+	_play_space.discard_history = game.get_discard_history()
 
 
 func _render_melds() -> void:
-	var melds_data: Array = game.get_melds_data()
-	var temp: Array = []
-	for i in range(len(melds_data)):
-		if i == player_index:
-			break
-		else:
-			temp.append(melds_data.pop_front())
-	melds_data.append_array(temp)
-	_play_space.melds_info = melds_data
+	_play_space.melds_info = game.get_melds_data()
 
 
 ################################################################
@@ -147,7 +131,7 @@ func _on_NewGame_pressed():
 
 func _on_KongTimes_value_changed(value):
 	game.kong_count = int(value)
-	_play_space.known_dora = game.get_dora(MahjongBase.DORA.OUTER)
+	_play_space.known_dora = game.get_the_dora(MahjongBase.DORA.OUTER)
 	$DebugConsole/Deck.bbcode_text = game.temp_debug_deck()
 
 

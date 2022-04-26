@@ -1,5 +1,5 @@
 class_name MahjongGame
-extends Node
+extends MahjongBase
 # Server 麻将游戏管理类
 # 拥有整局游戏全部信息
 
@@ -65,11 +65,11 @@ class Player:
 ################################################################
 func _init():
 	randomize()
-	_deck_sequence = MahjongBase.new_tile_walls(true)
+	_deck_sequence = .new_tile_walls(true)
 	sequence_md5 = _deck_sequence.md5_text()
-	_tiles_wall = MahjongBase.deal_tiles(_deck_sequence, -1)
+	_tiles_wall = .deal_tiles(_deck_sequence, -1)
 	for i in range(4):
-		_player_list.append(Player.new(MahjongBase.deal_tiles(_deck_sequence, i)))
+		_player_list.append(Player.new(.deal_tiles(_deck_sequence, i)))
 
 
 #func _ready():
@@ -91,8 +91,9 @@ func get_player(player_index: int):
 	return _player_list[player_index]
 
 
-func get_dora(dora_type: int):
-	return MahjongBase.get_dora(_deck_sequence, dora_type, kong_count)
+
+func get_the_dora(dora_type: int):
+	return .get_dora(_deck_sequence, dora_type, kong_count)
 
 
 func get_tiles_count() -> int:
@@ -121,7 +122,7 @@ func deal(player_index: int) -> void:
 
 func temp_debug_deck():
 	var temp: Array = [len(_tiles_wall)]
-	temp.append_array(MahjongBase.get_debug_info(_deck_sequence, kong_count, temp[0]))
+	temp.append_array(.get_debug_info(_deck_sequence, kong_count, temp[0]))
 	return "本局山牌({0}): {1}\n本局王牌(14): {2}".format(temp)
 
 

@@ -31,6 +31,7 @@ const DEBUG_SCENE = preload("res://src/client/local_game/debug/debug_algorithm.t
 ################################################################
 # Onready variables 自动初始化变量
 ################################################################
+onready var _version_label = $VersionLabel
 onready var _dialog = $Dialog
 onready var _alert_dialog = $Dialog/AcceptDialog
 onready var _game_start_buttons = $GameStartButtons
@@ -45,6 +46,7 @@ onready var _local_game_buttons = $LocalGameButtons
 
 
 func _ready():
+	_version_label.text = Global.VERSION
 	_alert_dialog.rect_size = Vector2(480, 200)
 	_alert_dialog.get_ok().text = "行吧"
 

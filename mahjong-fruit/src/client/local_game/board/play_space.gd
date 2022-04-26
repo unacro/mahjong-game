@@ -68,10 +68,10 @@ onready var _other_hand_ui = [
 	$PrevtHand,
 ]
 onready var _melds_region = [
-	$SelfMelds,
-	$NextMelds,
-	$FrontMelds,
-	$PrevMelds,
+	$HandTiles,
+	$NextHand,
+	$FrontHand,
+	$PrevtHand,
 ]
 onready var _tiles_count_label = $CenterInfo/Panel/MarginContainer/MetaInfoHbox/MetaInfoVBox/RemainTileCount
 onready var _se_player = {
@@ -139,10 +139,9 @@ func set_tiles_count(count: int) -> void:
 
 
 func set_discard_history(history: Array) -> void:
-	discard_history = history  # 需要已经排好座次顺序的舍张记录
-	for i in range(4):
-#		print("[DEBUG] 玩家", i, " 舍张 ",  _output_history[i].discarded_tiles, " => ", history[i])
-		_output_history[i].discarded_tiles = history[i]
+	discard_history = history
+	for i in range(len(history)):
+		_output_history[i].discarded_tiles = history[(i + player_seat) % 4]
 
 
 func set_hand_tiles(tiles: Array) -> void:
@@ -160,8 +159,9 @@ func set_others_hands(hands: Array) -> void:
 func set_melds_info(melds: Array) -> void:
 	assert(len(melds) == 4)
 	melds_info = melds
+	# TODO 处理各家副露分别渲染
 	for i in range(len(melds)):
-		_melds_region[i].melds = melds[i]
+		_melds_region[i].melds = melds[(i + player_seat) % 4]
 
 
 func set_the_tile(tile: int) -> void:

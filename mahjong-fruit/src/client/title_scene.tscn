@@ -183,12 +183,19 @@ margin_bottom = 720.0
 color = Color( 0, 0, 0, 0.498039 )
 
 [node name="AcceptDialog" type="AcceptDialog" parent="Dialog"]
-margin_right = 480.0
-margin_bottom = 200.0
+margin_right = 1280.0
+margin_bottom = 720.0
 rect_min_size = Vector2( 480, 200 )
 popup_exclusive = true
 window_title = "你想多了"
 dialog_text = "不存在的"
+
+[node name="VersionLabel" type="Label" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -20.0
+margin_right = 40.0
+text = "Version Info"
 
 [connection signal="pressed" from="GameStartButtons/CenterContainer/HBoxContainer/Online" to="." method="_on_Online_pressed"]
 [connection signal="pressed" from="GameStartButtons/CenterContainer/HBoxContainer/Co-op" to="." method="_on_Coop_pressed"]

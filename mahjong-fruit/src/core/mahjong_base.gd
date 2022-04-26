@@ -289,12 +289,22 @@ static func serialize(tiles: Array) -> String:
 
 
 static func deserialize(deck_sequence: String) -> Array:
+	var regex = RegEx.new()
+	regex.compile("(?<tiles>\\d+[mpsz])")  # TODO 正则处理等号
+	var fixed_sequence: String = ""
+	for result in regex.search_all(deck_sequence):
+		var temp: Array = []
+		for i in result.get_string("tiles"):
+			temp.append(i)
+		var character: String = temp.pop_back()
+		for tile_rank in temp:
+			fixed_sequence += "%s%s" % [tile_rank, character]
 	var deck: Array = []
 	var suit: Dictionary = { "m": 100, "p": 200, "s": 300, "z": 400 }
 	var count: Dictionary = {}
 	# warning-ignore:integer_division
-	for i in range(int(len(deck_sequence) / 2)):
-		var tile = deck_sequence.substr(i * 2, 2)
+	for i in range(int(len(fixed_sequence) / 2)):
+		var tile = fixed_sequence.substr(i * 2, 2)
 		if tile.substr(0, 1) == "0":
 			deck.append(suit[tile.substr(1, 1)] + 53)
 		else:
@@ -306,6 +316,63 @@ static func deserialize(deck_sequence: String) -> Array:
 				count[index] += 1
 			deck.append(index + count[index])
 	return deck
+
+
+static func serialize_meld(meld_data_arr: Array) -> Array:
+	var meld_sequence_arr: Array = []
+	for meld in meld_data_arr:
+		var meld_sequence: String = ord_at(meld["have"][0]).substr(1, 1)
+		for tile in meld["have"]:
+			if tile % 100 == 53 and tile < 400:
+				meld_sequence += "0"
+			else:
+				meld_sequence += str(int(tile / 10) % 10)
+		if not meld["pick"].empty():
+			meld_sequence += "-"
+			for tile in meld["pick"]:
+				if tile % 100 == 53 and tile < 400:
+					meld_sequence += "0"
+				else:
+					meld_sequence += str(int(tile / 10) % 10)
+		if len(meld["have"]) < 4 and int(meld["have"][0] / 10) == int(meld["have"][1] / 10):
+			meld_sequence += "_%d" % meld["mark"]
+		meld_sequence_arr.append(meld_sequence)
+	return meld_sequence_arr
+
+
+static func deserialize_meld(meld_sequence_arr: Array) -> Array:
+	var meld_data_arr: Array = []
+	for meld_sequence in meld_sequence_arr:
+		var regex = RegEx.new()
+		regex.compile("^([mpsz]{1})(\\d{2,4})-?(\\d{0,2})_?(\\d?)$")
+		var result = regex.search(meld_sequence.strip_edges().to_lower())
+		if result:
+			var suit: int = (["m", "p", "s", "z"].find(result.get_string(1)) + 1) * 100
+			var meld_data: Dictionary = {
+				"have": [],
+				"pick": [],
+				"mark": 1 if result.get_string(4).empty() else int(clamp(
+					result.get_string(4).to_int(), 1, 3
+				)),
+			}
+			var counter: int = 0
+			var key: Dictionary = { 2: "have", 3: "pick" }
+			for index in range(2, 4):
+				for i in range(len(result.get_string(index))):
+					if result.get_string(index)[i] == "0":
+						meld_data[key[index]].append(suit + 53)
+					else:
+						meld_data[key[index]].append(
+								suit + result.get_string(index)[i].to_int() * 10 + counter)
+						counter += 1
+			if [ len(meld_data["have"]), len(meld_data["pick"]) ] in [
+					[2, 1], [2, 2], [3, 1], [4, 0] ]:
+				meld_data_arr.append(meld_data)
+			else:
+				meld_data_arr.append(null)
+		else:
+			meld_data_arr.append(null)
+	return meld_data_arr
 
 
 static func new_tile_walls(enable_sequence: bool = false):
@@ -395,6 +462,28 @@ static func get_dora(sequence: String, dora_type: int, kong_count: int = 0):
 			return dora[kong_count]
 	return null
 
+static func fetch_kotsu(target: Array) -> Array:  # 取出刻子
+	var kotsu: Array = []
+	for i in range(len(target)):
+		if target[i] >= 3:
+			target[i] -= 3
+			kotsu.append(i)
+	return kotsu
+
+static func fetch_shuntsu(target: Array) -> Array:  # 取出顺子
+	var shuntsu: Array = []
+	for i in range(3):
+		var j: int = 0
+		while j < 7:
+			var index: int = i * 9 + j
+			if target.slice(index, index + 2).min() >= 1:
+				target[index] -= 1
+				target[index + 1] -= 1
+				target[index + 2] -= 1
+				shuntsu.append(index)
+			else:
+				j += 1
+	return shuntsu
 
 static func can_win(tiles) -> bool:
 	var hand: Array = []
@@ -409,15 +498,52 @@ static func can_win(tiles) -> bool:
 		printerr("判断和牌失败 解析手牌数据时发生错误")
 		return false
 	
-	print("[DEBUG] 手牌为=[%s]" % Utils.array_join(hand, " "))
-
-	var map_res: Array = _map_tiles_to_count(hand)
-#	print("[DEBUG] 映射为数量数组 ", Utils.array_join(_map_tiles_to_count(hand, MAP_METHOD.SHORT)))
-	# warning-ignore:return_value_discarded
-	_map_count_to_index(map_res)
+	var hand_count_map: Array = _map_tiles_to_count(hand)
+	if hand_count_map.count(2) == 7:  # 七对子
+		return true
 	
-	return false
-
+	if hand_count_map.count(1) >= 12:  # 国士无双
+		var one_nine_count: int = 0
+		for i in range(3):
+			if hand_count_map[i * 9] > 0:
+				one_nine_count += 1
+			if hand_count_map[i * 9 + 8] > 0:
+				one_nine_count += 1
+		for i in range(27, 34):
+			if hand_count_map[i] > 0:
+				one_nine_count += 1
+		if one_nine_count == 13:
+			return true
+		elif one_nine_count >= 9:
+			print('TODO 放到听牌判断里 九种九牌 允许流局 %s' % hand)
+		else:
+			return false
+	
+	var ret: Array = []
+	for i in range(len(hand_count_map)):
+		for kotsu_first in range(2):  # 轮流 先刻子后顺子 先顺子后刻子
+			var janto = null
+			var kotsu: Array = []
+			var shuntsu: Array = []
+			var temp: Array = hand_count_map.duplicate()
+			if temp[i] >= 2:
+				temp[i] -= 2
+				janto = i
+				if kotsu_first == 0:
+					kotsu = fetch_kotsu(temp)
+					shuntsu = fetch_shuntsu(temp)
+				else:
+					shuntsu = fetch_shuntsu(temp)
+					kotsu = fetch_kotsu(temp)
+				if temp.max() == 0:
+					ret.append(janto)
+					ret.append(kotsu)
+					ret.append(shuntsu)
+	if len(ret) > 0:
+#		print("雀头 %d 刻子 %s 顺子 %s" % [ret[0], ret[1], ret[2]])
+		return true
+	else:
+		return false
 
 static func check_call(hand: Array, tile: int) -> Dictionary:
 	var options: Dictionary = {}
